@@ -1,0 +1,330 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>引力弹弓 · VIS·LAB</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="nbody">
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span><span class="brand-name">VIS·LAB</span><span class="brand-sub">可视化探索实验室</span></a>
+  <nav class="exp-nav">
+    <a class="exp-link" href="graph.html" title="上一个：力导向网络"><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m15 18-6-6 6-6"/></svg><span class="exp-link-label">力导向网络</span></a>
+    <span class="exp-current"><span class="exp-no">01</span><em>/11</em><b>引力弹弓</b></span>
+    <a class="exp-link next" href="boids.html" title="下一个：群体智能"><span class="exp-link-label">群体智能</span><svg class="icon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><path d="m9 18 6-6-6-6"/></svg></a>
+  </nav>
+</header>
+<main class="page">
+  <section class="page-head">
+    <div class="page-head-text">
+      <h1>引力弹弓<span class="h-en">N-Body Gravity</span></h1>
+      <p class="page-desc">牛顿引力下的多体轨道模拟：拖拽发射天体，看它们在引力中起舞。</p>
+    </div>
+    <div class="tags"><span class="tag tag-sim">粒子与模拟</span><span class="tag">Canvas</span></div>
+  </section>
+  <section class="lab">
+    <div class="stage-wrap">
+      <canvas id="stage"></canvas>
+      <div class="stage-hud"><span class="hud-item" id="hud-fps">-- fps</span><span class="hud-item" id="hud-stat">—</span></div>
+      <div class="stage-tip">拖拽发射天体 · 点击放置静止天体</div>
+    </div>
+    <aside class="panel">
+      <div class="panel-title">控制台<span>CONSOLE</span></div>
+      <div class="panel-body">
+        <div class="control-group">
+          <div class="cg-head"><label>预设场景</label></div>
+          <div class="seg" id="preset">
+            <button type="button" data-v="binary" class="active">双星系统</button>
+            <button type="button" data-v="star">恒星行星</button>
+            <button type="button" data-v="figure8">三体·8字</button>
+            <button type="button" data-v="cluster">星团对撞</button>
+          </div>
+        </div>
+        <div class="control-group">
+          <div class="cg-head"><label for="g">引力常数 G</label><output class="val" id="g-val">1.0</output></div>
+          <input type="range" id="g" min="0.1" max="4" step="0.1" value="1">
+        </div>
+        <div class="control-group">
+          <div class="cg-head"><label for="mass">发射质量</label><output class="val" id="mass-val">300</output></div>
+          <input type="range" id="mass" min="10" max="3000" step="10" value="300">
+        </div>
+        <div class="control-group">
+          <div class="cg-head"><label for="trail">轨迹长度</label><output class="val" id="trail-val">70%</output></div>
+          <input type="range" id="trail" min="0" max="100" step="1" value="70">
+        </div>
+        <div class="control-group">
+          <div class="cg-head"><label for="speed">时间流速</label><output class="val" id="speed-val">×1.0</output></div>
+          <input type="range" id="speed" min="0.2" max="3" step="0.1" value="1">
+        </div>
+        <div class="check"><input type="checkbox" id="merge" checked><label for="merge">碰撞合并（动量守恒）</label></div>
+        <div class="btn-row">
+          <button class="btn primary" id="btn-run">暂停</button>
+          <button class="btn ghost" id="btn-reset">重置</button>
+        </div>
+        <div class="panel-note"><b>原理</b>万有引力 F = G·m₁m₂/r²，配合软化因子与半隐式欧拉积分即可稳定演化多体系统；三体以上轨道对初值极端敏感——这正是混沌。</div>
+      </div>
+    </aside>
+  </section>
+</main>
+<footer class="footer"><span>VIS·LAB — 浏览器里的计算美学</span><span class="footer-sep">·</span><span>纯前端 · 零依赖 · 可离线</span></footer>
+<script src="shared.js"></script>
+<script>
+(function () {
+  "use strict";
+  var st = VL.mount(VL.$("stage"));
+  var ctx = st.ctx;
+  var fpsM = VL.fps(VL.$("hud-fps"));
+  var hud = VL.$("hud-stat");
+
+  var P = { G: 1, mass: 300, trail: 70, speed: 1, preset: "binary", running: true };
+  var bodies = [];
+  var drag = null;
+
+  function radiusOf(m) { return 2 + Math.cbrt(m) * 0.9; }
+  function hueOf(m) {
+    var t = VL.clamp(Math.log(m + 1) / Math.log(6000), 0, 1);
+    return 190 + t * 130;
+  }
+  function mk(x, y, vx, vy, m, rOverride) {
+    return { x: x, y: y, vx: vx, vy: vy, m: m, r: rOverride || radiusOf(m), hue: hueOf(m), ax: 0, ay: 0 };
+  }
+
+  /* 让系统整体动量为零，避免漂出画面 */
+  function zeroMomentum() {
+    var px = 0, py = 0, tm = 0, i;
+    for (i = 0; i < bodies.length; i++) { px += bodies[i].vx * bodies[i].m; py += bodies[i].vy * bodies[i].m; tm += bodies[i].m; }
+    if (tm <= 0) return;
+    var vx = px / tm, vy = py / tm;
+    for (i = 0; i < bodies.length; i++) { bodies[i].vx -= vx; bodies[i].vy -= vy; }
+  }
+
+  var presets = {
+    /* 双星：等质量圆轨道 v = √(G·m / 4d) */
+    binary: function () {
+      var d = Math.min(st.w, st.h) * 0.22;
+      var v = Math.sqrt(1400 / (4 * d));
+      bodies = [
+        mk(st.w / 2 - d, st.h / 2, 0, -v, 1400),
+        mk(st.w / 2 + d, st.h / 2, 0, v, 1400)
+      ];
+    },
+    /* 恒星 + 五颗行星（圆轨道速度 √(GM/r)） */
+    star: function () {
+      bodies = [mk(st.w / 2, st.h / 2, 0, 0, 5200, 15)];
+      var fr = [0.13, 0.19, 0.26, 0.33, 0.42];
+      for (var i = 0; i < fr.length; i++) {
+        var r = fr[i] * Math.min(st.w, st.h);
+        var v = Math.sqrt(5200 / r);
+        var a = VL.rand(0, VL.TAU);
+        bodies.push(mk(st.w / 2 + Math.cos(a) * r, st.h / 2 + Math.sin(a) * r, -Math.sin(a) * v, Math.cos(a) * v, VL.randi(6, 60)));
+      }
+    },
+    /* 三体 8 字周期解（Chenciner–Montgomery） */
+    figure8: function () {
+      var s = Math.min(st.w, st.h) * 0.155;
+      var k = Math.sqrt(s); /* 位置缩放 s ⇒ 速度缩放 √s */
+      var p1 = [0.97000436, -0.24308753], p2 = [-p1[0], -p1[1]];
+      var v3 = [-0.93240737, -0.86473146];
+      bodies = [
+        mk(st.w / 2 + p1[0] * s, st.h / 2 + p1[1] * s, -v3[0] / 2 * k, -v3[1] / 2 * k, 1, 5),
+        mk(st.w / 2 + p2[0] * s, st.h / 2 + p2[1] * s, -v3[0] / 2 * k, -v3[1] / 2 * k, 1, 5),
+        mk(st.w / 2, st.h / 2, v3[0] * k, v3[1] * k, 1, 5)
+      ];
+    },
+    /* 两个星团相向对撞 */
+    cluster: function () {
+      bodies = [];
+      for (var c = 0; c < 2; c++) {
+        var bx = st.w / 2 + (c === 0 ? -st.w * 0.2 : st.w * 0.2);
+        var dir = c === 0 ? 1 : -1;
+        for (var i = 0; i < 20; i++) {
+          var gx = (Math.random() + Math.random() + Math.random() - 1.5) * 70;
+          var gy = (Math.random() + Math.random() + Math.random() - 1.5) * 55;
+          bodies.push(mk(bx + gx, st.h / 2 + gy, dir * 0.9 + VL.rand(-0.25, 0.25), VL.rand(-0.25, 0.25), VL.randi(20, 260)));
+        }
+      }
+    }
+  };
+
+  /* ---------- 预设切换 ---------- */
+  function applyPreset(v) {
+    P.preset = v;
+    var rG = VL.$("g");
+    rG.value = "1";
+    rG.dispatchEvent(new Event("input"));
+    VL.$("merge").checked = (v !== "figure8");
+    presets[v]();
+    zeroMomentum();
+    ctx.fillStyle = "#04070d";
+    ctx.fillRect(0, 0, st.w, st.h);
+    P.running = true;
+    VL.$("btn-run").textContent = "暂停";
+  }
+
+  /* ---------- 物理 ---------- */
+  function step(h) {
+    var n = bodies.length, G = P.G, eps2 = 64, i, j, b, o, dx, dy, d2, inv, f;
+    for (i = 0; i < n; i++) {
+      b = bodies[i]; b.ax = 0; b.ay = 0;
+      for (j = 0; j < n; j++) {
+        if (j === i) continue;
+        o = bodies[j];
+        dx = o.x - b.x; dy = o.y - b.y;
+        d2 = dx * dx + dy * dy + eps2;
+        inv = 1 / Math.sqrt(d2);
+        f = G * o.m / d2;
+        b.ax += f * dx * inv;
+        b.ay += f * dy * inv;
+      }
+    }
+    for (i = 0; i < n; i++) {
+      b = bodies[i];
+      b.vx += b.ax * h; b.vy += b.ay * h;
+      b.x += b.vx * h; b.y += b.vy * h;
+    }
+    if (VL.$("merge").checked) doMerge();
+    cull();
+  }
+
+  function doMerge() {
+    for (var i = 0; i < bodies.length; i++) {
+      for (var j = i + 1; j < bodies.length; j++) {
+        var a = bodies[i], b = bodies[j];
+        if (Math.hypot(a.x - b.x, a.y - b.y) < (a.r + b.r) * 0.75) {
+          var big = a.m >= b.m ? a : b, sm = a.m >= b.m ? b : a;
+          var tm = big.m + sm.m;
+          big.x = (big.x * big.m + sm.x * sm.m) / tm;
+          big.y = (big.y * big.m + sm.y * sm.m) / tm;
+          big.vx = (big.vx * big.m + sm.vx * sm.m) / tm;
+          big.vy = (big.vy * big.m + sm.vy * sm.m) / tm;
+          big.m = tm;
+          big.r = radiusOf(tm);
+          big.hue = hueOf(tm);
+          bodies.splice(bodies.indexOf(sm), 1);
+          return;
+        }
+      }
+    }
+  }
+
+  function cull() {
+    var lim = Math.max(st.w, st.h) * 3;
+    var cx = st.w / 2, cy = st.h / 2;
+    for (var i = bodies.length - 1; i >= 0; i--) {
+      if (Math.abs(bodies[i].x - cx) > lim || Math.abs(bodies[i].y - cy) > lim) bodies.splice(i, 1);
+    }
+  }
+
+  /* ---------- 渲染 ---------- */
+  function render() {
+    var alpha = VL.lerp(0.4, 0.016, P.trail / 100);
+    ctx.fillStyle = "rgba(4,7,13," + alpha + ")";
+    ctx.fillRect(0, 0, st.w, st.h);
+    var i, b;
+    for (i = 0; i < bodies.length; i++) {
+      b = bodies[i];
+      ctx.shadowColor = VL.hsl(b.hue, 90, 60);
+      ctx.shadowBlur = b.r * 2.2;
+      ctx.fillStyle = VL.hsl(b.hue, 85, 68);
+      ctx.beginPath();
+      ctx.arc(b.x, b.y, b.r, 0, VL.TAU);
+      ctx.fill();
+    }
+    ctx.shadowBlur = 0;
+    for (i = 0; i < bodies.length; i++) {
+      b = bodies[i];
+      if (b.r > 5) {
+        ctx.fillStyle = "rgba(240,253,255,.85)";
+        ctx.beginPath();
+        ctx.arc(b.x, b.y, Math.max(1.2, b.r * 0.32), 0, VL.TAU);
+        ctx.fill();
+      }
+    }
+    /* 发射预览：起点圆 + 速度矢量 */
+    if (drag) {
+      var r = radiusOf(P.mass);
+      ctx.strokeStyle = "rgba(34,211,238,.9)";
+      ctx.setLineDash([4, 4]);
+      ctx.beginPath();
+      ctx.arc(drag.x0, drag.y0, r, 0, VL.TAU);
+      ctx.stroke();
+      ctx.setLineDash([]);
+      ctx.beginPath();
+      ctx.moveTo(drag.x0, drag.y0);
+      ctx.lineTo(drag.x1, drag.y1);
+      ctx.stroke();
+      var ang = Math.atan2(drag.y1 - drag.y0, drag.x1 - drag.x0);
+      ctx.beginPath();
+      ctx.moveTo(drag.x1, drag.y1);
+      ctx.lineTo(drag.x1 - Math.cos(ang - 0.4) * 8, drag.y1 - Math.sin(ang - 0.4) * 8);
+      ctx.moveTo(drag.x1, drag.y1);
+      ctx.lineTo(drag.x1 - Math.cos(ang + 0.4) * 8, drag.y1 - Math.sin(ang + 0.4) * 8);
+      ctx.stroke();
+    }
+  }
+
+  /* ---------- 主循环 ---------- */
+  var acc = 0;
+  VL.loop(function (dt) {
+    if (P.running) {
+      acc += dt;
+      var h = 0.06 * P.speed;
+      while (acc >= 1 / 60) {
+        step(h); step(h);
+        acc -= 1 / 60;
+      }
+    } else {
+      acc = 0;
+    }
+    render();
+    fpsM.tick();
+    hud.textContent = "天体 " + bodies.length;
+  });
+
+  /* ---------- 交互：拖拽发射 ---------- */
+  var cv = st.canvas;
+  function pos(e) {
+    var r = cv.getBoundingClientRect();
+    return { x: e.clientX - r.left, y: e.clientY - r.top };
+  }
+  cv.addEventListener("pointerdown", function (e) {
+    if (e.button !== 0) return;
+    var p = pos(e);
+    drag = { x0: p.x, y0: p.y, x1: p.x, y1: p.y };
+    cv.setPointerCapture(e.pointerId);
+  });
+  cv.addEventListener("pointermove", function (e) {
+    if (!drag) return;
+    var p = pos(e);
+    drag.x1 = p.x; drag.y1 = p.y;
+  });
+  cv.addEventListener("pointerup", function (e) {
+    if (!drag) return;
+    var dx = drag.x1 - drag.x0, dy = drag.y1 - drag.y0;
+    var d = Math.hypot(dx, dy);
+    var v = Math.min(d * 0.03, 9);
+    var vx = 0, vy = 0;
+    if (d >= 4) { vx = dx / d * v; vy = dy / d * v; }
+    bodies.push(mk(drag.x0, drag.y0, vx, vy, P.mass));
+    drag = null;
+  });
+  cv.addEventListener("pointercancel", function () { drag = null; });
+
+  /* ---------- 控件绑定 ---------- */
+  VL.bindRange("g", function (v) { P.G = v; }, function (v) { return v.toFixed(1); });
+  VL.bindRange("mass", function (v) { P.mass = v; }, function (v) { return Math.round(v); });
+  VL.bindRange("trail", function (v) { P.trail = v; }, function (v) { return Math.round(v) + "%"; });
+  VL.bindRange("speed", function (v) { P.speed = v; }, function (v) { return "×" + v.toFixed(1); });
+
+  VL.$("btn-run").addEventListener("click", function () {
+    P.running = !P.running;
+    this.textContent = P.running ? "暂停" : "继续";
+  });
+  VL.$("btn-reset").addEventListener("click", function () { applyPreset(P.preset); });
+
+  VL.bindSeg("preset", applyPreset);
+})();
+</script>
+</body>
+</html>

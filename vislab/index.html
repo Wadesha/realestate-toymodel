@@ -1,0 +1,147 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>VIS·LAB · 可视化探索实验室</title>
+<link rel="stylesheet" href="styles.css">
+</head>
+<body data-page="index">
+<header class="topbar">
+  <a class="brand" href="index.html"><span class="brand-dot" aria-hidden="true"></span><span class="brand-name">VIS·LAB</span><span class="brand-sub">可视化探索实验室</span></a>
+  <nav class="exp-nav">
+    <span class="hub-pill">11 个交互实验 · 全部本地运行</span>
+  </nav>
+</header>
+<main class="page">
+  <section class="hero">
+    <p class="hero-kicker">INTERACTIVE VISUAL LAB</p>
+    <h1>把数学与算法，<br><span class="grad">放进你的浏览器</span></h1>
+    <p class="hero-sub">从引力弹弓到分形深潜 —— 11 个可交互的可视化实验。全部由 Canvas 实时演算，零依赖、零安装，离线也能运行。</p>
+    <div class="hero-stats">
+      <div class="stat"><b>11</b><span>交互实验</span></div>
+      <div class="stat"><b>0</b><span>外部依赖</span></div>
+      <div class="stat"><b>60fps</b><span>实时演算</span></div>
+    </div>
+  </section>
+
+  <nav class="filters" id="filters">
+    <button type="button" data-v="all" class="active">全部</button>
+    <button type="button" data-v="sim">粒子与模拟</button>
+    <button type="button" data-v="algo">算法与结构</button>
+    <button type="button" data-v="math">数学与信号</button>
+  </nav>
+
+  <section class="grid" id="grid">
+    <a class="vcard" href="nbody.html" data-cat="sim" style="--i:0">
+      <div class="vcard-media"><span class="vcard-no">01</span><canvas data-preview="nbody"></canvas></div>
+      <div class="vcard-body">
+        <h2>引力弹弓<span class="en">N-Body</span></h2>
+        <p>牛顿引力下的多体轨道模拟：拖拽发射天体，看它们在引力中起舞。</p>
+        <div class="vcard-meta"><span class="tag tag-sim">粒子与模拟</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="boids.html" data-cat="sim" style="--i:1">
+      <div class="vcard-media"><span class="vcard-no">02</span><canvas data-preview="boids"></canvas></div>
+      <div class="vcard-body">
+        <h2>群体智能<span class="en">Boids</span></h2>
+        <p>分离、对齐、聚拢 —— 三条简单规则，涌现出鸟群的秩序之美。</p>
+        <div class="vcard-meta"><span class="tag tag-sim">粒子与模拟</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="flowfield.html" data-cat="sim" style="--i:2">
+      <div class="vcard-media"><span class="vcard-no">03</span><canvas data-preview="flowfield"></canvas></div>
+      <div class="vcard-body">
+        <h2>粒子流场<span class="en">Flow Field</span></h2>
+        <p>数千粒子沿 Perlin 噪声场漂流，绘出一条流动的光河。</p>
+        <div class="vcard-meta"><span class="tag tag-sim">粒子与模拟</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="gameoflife.html" data-cat="sim" style="--i:3">
+      <div class="vcard-media"><span class="vcard-no">04</span><canvas data-preview="gameoflife"></canvas></div>
+      <div class="vcard-body">
+        <h2>生命游戏<span class="en">Game of Life</span></h2>
+        <p>四条规则与一片网格，涌现出滑翔机、振荡器与无限复杂。</p>
+        <div class="vcard-meta"><span class="tag tag-sim">粒子与模拟</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="attractors.html" data-cat="math" style="--i:4">
+      <div class="vcard-media"><span class="vcard-no">05</span><canvas data-preview="attractors"></canvas></div>
+      <div class="vcard-body">
+        <h2>奇异吸引子<span class="en">Attractors</span></h2>
+        <p>洛伦兹等混沌系统的三维点云，一支永不重复的舞。</p>
+        <div class="vcard-meta"><span class="tag tag-math">数学与信号</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="fractal.html" data-cat="math" style="--i:5">
+      <div class="vcard-media"><span class="vcard-no">06</span><canvas data-preview="fractal"></canvas></div>
+      <div class="vcard-body">
+        <h2>分形深潜<span class="en">Mandelbrot</span></h2>
+        <p>无限放大的复平面边界 —— 每一层都藏着新的宇宙。</p>
+        <div class="vcard-meta"><span class="tag tag-math">数学与信号</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="waves.html" data-cat="math" style="--i:6">
+      <div class="vcard-media"><span class="vcard-no">07</span><canvas data-preview="waves"></canvas></div>
+      <div class="vcard-body">
+        <h2>波的干涉<span class="en">Interference</span></h2>
+        <p>点源涟漪相互叠加，演绎驻波与莫尔条纹。</p>
+        <div class="vcard-meta"><span class="tag tag-math">数学与信号</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="fourier.html" data-cat="math" style="--i:7">
+      <div class="vcard-media"><span class="vcard-no">08</span><canvas data-preview="fourier"></canvas></div>
+      <div class="vcard-body">
+        <h2>傅里叶画波<span class="en">Epicycles</span></h2>
+        <p>转动的圆链叠加出方波 —— 傅里叶级数的直观演绎。</p>
+        <div class="vcard-meta"><span class="tag tag-math">数学与信号</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="sorting.html" data-cat="algo" style="--i:8">
+      <div class="vcard-media"><span class="vcard-no">09</span><canvas data-preview="sorting"></canvas></div>
+      <div class="vcard-body">
+        <h2>排序之舞<span class="en">Sorting</span></h2>
+        <p>冒泡到快排的动画与实时统计，比较次数一目了然。</p>
+        <div class="vcard-meta"><span class="tag tag-algo">算法与结构</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="maze.html" data-cat="algo" style="--i:9">
+      <div class="vcard-media"><span class="vcard-no">10</span><canvas data-preview="maze"></canvas></div>
+      <div class="vcard-body">
+        <h2>迷宫实验室<span class="en">Maze Lab</span></h2>
+        <p>目睹迷宫在算法中生长，再用 BFS 与 A* 亲手走出去。</p>
+        <div class="vcard-meta"><span class="tag tag-algo">算法与结构</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+    <a class="vcard" href="graph.html" data-cat="algo" style="--i:10">
+      <div class="vcard-media"><span class="vcard-no">11</span><canvas data-preview="graph"></canvas></div>
+      <div class="vcard-body">
+        <h2>力导向网络<span class="en">Force Graph</span></h2>
+        <p>斥力与弹簧共舞，让网络社团结构自己浮现。</p>
+        <div class="vcard-meta"><span class="tag tag-algo">算法与结构</span><span class="vcard-cta">进入实验 →</span></div>
+      </div>
+    </a>
+  </section>
+</main>
+<footer class="footer"><span>VIS·LAB — 浏览器里的计算美学</span><span class="footer-sep">·</span><span>纯前端 · 零依赖 · 可离线</span></footer>
+<script src="shared.js"></script>
+<script src="previews.js"></script>
+<script>
+/* 分类筛选 */
+(function () {
+  var box = VL.$("filters");
+  var cards = document.querySelectorAll(".vcard");
+  box.addEventListener("click", function (e) {
+    var b = e.target.closest("button");
+    if (!b) return;
+    var btns = box.querySelectorAll("button");
+    for (var i = 0; i < btns.length; i++) btns[i].classList.toggle("active", btns[i] === b);
+    var v = b.dataset.v;
+    for (var j = 0; j < cards.length; j++) {
+      cards[j].style.display = (v === "all" || cards[j].dataset.cat === v) ? "" : "none";
+    }
+  });
+})();
+</script>
+</body>
+</html>
