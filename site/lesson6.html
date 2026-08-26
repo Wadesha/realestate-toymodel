@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 6 课 · 楼龄与房价：房子越新越贵吗</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html" class="active">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 6 课 / 共 8 课</div>
+    <h1>楼龄与房价：房子越新越贵吗</h1>
+    <p class="desc">直觉说：房子越新越贵。这一课我们用数据检验这个直觉——结果会推翻它，并且顺手学到整个统计学最重要的思想：<strong>相关不等于因果</strong>。</p>
+    <div class="tags">
+      <span class="tag">思维训练</span>
+      <span class="tag">约 25 分钟</span>
+      <span class="tag">本课产出：年代-房价对比图 + 一个反常识发现</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>学会把连续的年份切成"年代组"（<code>pd.cut</code>）</li>
+      <li>学会算相关系数（<code>corr</code>）并读懂它</li>
+      <li>理解三个统计思维大词：混杂变量、幸存者偏差、相关≠因果</li>
+      <li>体验"提出假设 → 数据检验 → 推翻/修正"的完整研究循环</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>先写下你的猜测（假设）</h3></div>
+      <p class="note">做分析前先明确猜测，是防止"看数据编故事"的好习惯。来，先投票：</p>
+      <div class="callout tip">
+        <h4>假设 H：建成年份越新，房价越高</h4>
+        <p>支持的理由：新房子设计好、贷款年限长、住着舒服。<br>
+        反对的理由：老房子往往占着市中心和学区……</p>
+      </div>
+      <p class="note">数据能不能验证？year_built 列有 7,106 个非空值（清洗后），足够做一次检验。开工，新建 <code>step6_age.py</code>：</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>把年份切成"年代组"</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step6_age.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+df = df.drop_duplicates()
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+
+<span class="cm"># 只保留有建成年份的行（.copy() 避免 pandas 的复制警告）</span>
+aged = df.dropna(subset=[<span class="s">"year_built"</span>]).copy()
+
+<span class="cm"># 把连续年份切成 5 个年代组，就像直方图的 bins 一样</span>
+bins = [0, 1990, 2000, 2010, 2020, 2030]
+labels = [<span class="s">"1990前"</span>, <span class="s">"1990-1999"</span>, <span class="s">"2000-2009"</span>, <span class="s">"2010-2019"</span>, <span class="s">"2020后"</span>]
+aged[<span class="s">"era"</span>] = pd.cut(aged[<span class="s">"year_built"</span>], bins=bins, labels=labels, right=<span class="k">False</span>)
+
+era_stat = (
+    aged.groupby(<span class="s">"era"</span>, observed=<span class="k">True</span>)
+        .agg(n=(<span class="s">"community_name"</span>, <span class="s">"count"</span>),
+             median_price=(<span class="s">"price"</span>, <span class="s">"median"</span>))
+        .reset_index()
+)
+print(era_stat.to_string(index=<span class="k">False</span>))
+
+<span class="cm"># 顺便算一下"年份"和"房价"的相关系数</span>
+print(<span class="s">"\n相关系数："</span>, round(aged[<span class="s">"year_built"</span>].corr(aged[<span class="s">"price"</span>]), 3))</pre>
+      </div>
+      <div class="console">         era     n  median_price
+     1990前   140       4.8254
+  1990-1999   741       0.9000
+  2000-2009  2074       0.8194
+  2010-2019  2452       0.8725
+     2020后  1699       0.8800
+
+相关系数： -0.138</div>
+      <div class="callout warn">
+        <h4>⏸ 停一下，两个结果都出乎意料</h4>
+        <p><strong>① 最贵的居然是"1990 前"的老房子：中位 4.83 万/㎡，是其他年代的 5 倍多！</strong>年份跨过 1990 这条线，价格断崖式下跌，之后各年代挤在 0.82～0.90 万几乎不动。<br>
+        <strong>② 相关系数是 -0.138</strong>——不是正的，是<strong>负的</strong>（虽然很弱）。也就是说：总体上，房子越新反而（略微）越便宜。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>画图看清这个"反常"</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step6_age.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+plt.rcParams[<span class="s">"font.sans-serif"</span>] = [<span class="s">"Microsoft YaHei"</span>, <span class="s">"PingFang SC"</span>, <span class="s">"SimHei"</span>]
+plt.rcParams[<span class="s">"axes.unicode_minus"</span>] = <span class="k">False</span>
+
+fig, ax = plt.subplots(figsize=(8, 4.2))
+ax.bar(era_stat[<span class="s">"era"</span>].astype(str), era_stat[<span class="s">"median_price"</span>], width=0.55)
+ax.set_ylabel(<span class="s">"中位挂牌单价（万/㎡）"</span>)
+ax.set_xlabel(<span class="s">"小区建成年代"</span>)
+ax.set_title(<span class="s">"不同年代小区的中位挂牌单价"</span>)
+plt.tight_layout()
+plt.savefig(<span class="s">"era_price.png"</span>, dpi=150)
+plt.show()</pre>
+      </div>
+      <figure class="chart">
+        <img src="assets/charts/era_price.svg" alt="不同年代小区的中位挂牌单价">
+        <figcaption>"1990 前"一枝独秀（4.83 万），其余四个年代几乎躺平在 0.8～0.9 万。直觉中的"越新越贵"没有出现。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">4</div><h3>侦探时间：为什么老房子反而贵？</h3></div>
+      <p class="note">数据不会说谎，但需要解释。问一个问题：这些 1990 年前的老房子<strong>都在哪</strong>？</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step6_age.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="cm"># 查看 1990 年前小区的城市分布</span>
+old = aged[aged[<span class="s">"year_built"</span>] &lt; 1990]
+print(old[<span class="s">"city"</span>].value_counts().head(6))</pre>
+      </div>
+      <div class="console">天津       25
+乌鲁木齐    21
+上海       16
+北京       12
+南京        6
+唐山        5
+Name: city, dtype: int64</div>
+      <p class="note">谜底揭开了一半。再补一刀——<strong>只看上海内部</strong>，楼龄和房价的相关性是多少？</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step6_age.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre>sh = aged[aged[<span class="s">"city"</span>] == <span class="s">"上海"</span>]
+print(<span class="s">"上海内部相关系数："</span>, round(sh[<span class="s">"year_built"</span>].corr(sh[<span class="s">"price"</span>]), 3),
+      <span class="s">"，样本量："</span>, len(sh))</pre>
+      </div>
+      <div class="console">上海内部相关系数： -0.024 ，样本量： 73</div>
+      <div class="callout egg">
+        <h4>🎁 谜底：三个统计思维大词，一次凑齐</h4>
+        <p><strong>① 混杂变量：</strong>"城市"在暗中捣乱——能留到今天还被挂牌的 1990 年前老房子，大多在天津（老洋房）、上海（如第 3 课见过的 1950 年"良友别墅"，26.5 万/㎡）、北京这些贵城市。看到"老房子贵"，其实你看到的是"贵城市的老房子贵"。一旦控制城市不变（只看上海），相关系数立刻从 -0.138 缩水到 -0.024，几乎归零。<br>
+        <strong>② 幸存者偏差：</strong>普通县城的 1990 年前老破小早就没人挂牌、也不在数据里了；能在数据里"存活"的老房子，本身就是被核心地段和学区筛选过的佼佼者。<br>
+        <strong>③ 相关≠因果：</strong>"年份→价格"的相关系数是负的，但绝不意味着"把房子拆了重建就会变便宜"。它只描述了这份数据里的同时出现关系，不承诺因果。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习</h4>
+    <ol>
+      <li>把 bins 改成按 10 年一组，从 1960 开始切，看看更细的分组会不会改变结论。</li>
+      <li>照猫画虎：把 <code>secondhand_count</code>（挂牌套数）和 <code>price</code> 算一次相关系数，猜猜挂牌多的房子是贵还是便宜？</li>
+      <li>思考题：如果给你"每平米月租金"这一列，你会怎么检验"租售比"和"楼龄"的关系？想想可能有什么混杂变量。</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre># 练习1：
+bins = [1960, 1970, 1980, 1990, 2000, 2010, 2020, 2030]
+# 结论不变：1970-1990 之前的高价依然集中在少数贵城市。
+
+# 练习2：
+print(aged["secondhand_count"].corr(aged["price"]))   # 约 -0.1 上下，弱负相关
+# 解读：挂牌套数多的小区（大盘、老小区）单价略低，但关系很弱。
+
+# 练习3：算 rent_yuan_per_sqm 与 year_built 的 corr；
+# 混杂变量候选：城市、地段、装修、学区——和本课是同一个思路。</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson5.html"><div class="dir">← 上一课</div><div class="title">深入一座城：成都哪个区最贵</div></a>
+    <a class="next" href="lesson7.html"><div class="dir">下一课</div><div class="title">供需分析：哪些城市在大量卖房 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

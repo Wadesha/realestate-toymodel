@@ -1,0 +1,245 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 1 课 · 准备工作：让电脑能跑 Python</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html" class="active">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 1 课 / 共 8 课</div>
+    <h1>准备工作：让电脑能跑 Python</h1>
+    <p class="desc">这一课不分析任何数据，只做一件事：把"工具"装好，并让你第一次亲手把 15,346 行房价数据读进电脑。装好后，后面 7 节课都不用再装任何东西。</p>
+    <div class="tags">
+      <span class="tag">零基础起点</span>
+      <span class="tag">约 30 分钟</span>
+      <span class="tag">本课产出：屏幕打印出数据前 5 行</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>在自己的电脑上装好 Python（编程语言）和 pandas（数据处理工具）</li>
+      <li>建一个专门放练习的文件夹，把数据文件放进去</li>
+      <li>写出并运行人生第一个数据分析脚本</li>
+      <li>看懂这份数据的 18 个字段分别是什么意思</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>先搞懂三个词</h2>
+    <div class="concepts">
+      <div class="concept">
+        <h4>Python</h4>
+        <p>一门编程语言，也是数据分析领域最常用的语言。你写几行指令，电脑照着执行。我们全程只用"照抄代码"的方式使用它。</p>
+      </div>
+      <div class="concept">
+        <h4>pandas</h4>
+        <p>Python 的一个"外挂包"，专门处理表格数据。装了它，读 CSV、算平均值、排序都只要一行代码。名字来自 panel data（面板数据），和熊猫没关系。</p>
+      </div>
+      <div class="concept">
+        <h4>CSV 文件</h4>
+        <p>最通用的表格文件格式：纯文本，每行一条记录，逗号分隔各列。用 Excel 能打开，但 15,346 行用 Excel 筛选汇总会很卡——这正是我们要学 pandas 的原因。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>安装 Python</h3></div>
+      <p class="note">打开浏览器，访问 Python 官网下载页：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>下载地址</span></div>
+        <pre>https://www.python.org/downloads/</pre>
+      </div>
+      <p class="note">点击黄色的 <strong>Download Python 3.x.x</strong> 按钮，下载后双击安装。</p>
+      <div class="callout danger">
+        <h4>⚠️ Windows 用户必看（最容易踩的坑）</h4>
+        <p>安装第一页的底部有一个勾选框 <strong>Add python.exe to PATH</strong>——<strong>一定要勾上</strong>！不勾的话，以后在命令行里输入 python 会提示"不是内部或外部命令"。如果已经装完才发现没勾：重新运行安装包，选 Modify，再把勾打上即可。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>验证安装成功</h3></div>
+      <p class="note">打开"命令行"（就是那个能输入命令的黑窗口）：</p>
+      <ul style="margin-left:20px; font-size:14.5px;">
+        <li><strong>Windows</strong>：按键盘 <code>Win + R</code>，输入 <code>cmd</code>，回车</li>
+        <li><strong>Mac</strong>：按 <code>Command + 空格</code>，输入"终端"或 <code>Terminal</code>，回车</li>
+      </ul>
+      <p class="note">在黑窗口里输入下面的命令，回车：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>命令行</span></div>
+        <pre>python --version</pre>
+      </div>
+      <div class="console">Python 3.12.4</div>
+      <p class="note">能打印出 <code>Python 3.x.x</code> 字样就说明成功了（x 是几无所谓，只要开头是 3）。如果提示"不是内部或外部命令"，回去检查第 1 步的 PATH 勾选。</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>安装 pandas</h3></div>
+      <p class="note">继续在命令行里输入（这一步要联网，等待 1–2 分钟）：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>命令行</span></div>
+        <pre>python -m pip install pandas</pre>
+      </div>
+      <p class="note">看到 <code>Successfully installed pandas-x.x.x ...</code> 就装好了。</p>
+      <div class="callout tip">
+        <h4>为什么要加 python -m ？</h4>
+        <p>直接输入 <code>pip install pandas</code> 有时会报"pip 不是内部命令"；写成 <code>python -m pip</code> 的意思是"用刚装好的那个 Python 自带的 pip"，对初学者最稳。第 3 课要画图，到时再装 matplotlib，方法相同。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">4</div><h3>建练习文件夹</h3></div>
+      <p class="note">在你容易找到的地方（比如"文档"目录下）新建一个文件夹，取名 <code>house-analysis</code>（名字随意，不要用中文和空格更省心）。然后把数据文件复制进去：</p>
+      <div class="console">house-analysis/
+└── toy_realestate_sample.csv    ← 数据文件（约 4 MB）</div>
+      <p class="note">接下来 8 节课的所有代码文件，都保存在这个文件夹里。<strong>代码文件和数据文件放同一个文件夹</strong>，是后面代码能直接运行的秘诀。</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">5</div><h3>写下第一个脚本</h3></div>
+      <p class="note">用任意文本编辑器新建一个文件（Windows 自带的"记事本"就行，推荐以后装免费的 VS Code），粘贴下面的代码，保存为 <code>step1_load.py</code>（注意扩展名是 <code>.py</code> 不是 <code>.txt</code>），放进刚才的文件夹：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step1_load.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd                    <span class="cm"># 载入 pandas 工具，简写为 pd</span>
+
+<span class="cm"># 读取 CSV 文件。encoding="utf-8-sig" 是为了正确处理文件开头的隐藏字符</span>
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+
+<span class="cm"># df 就是装着 15,346 行数据的"表格"，下面问它三个问题：</span>
+print(<span class="s">"数据有多少行、多少列："</span>, df.shape)
+print(<span class="s">"一共有多少个城市："</span>, df[<span class="s">"city"</span>].nunique())
+print(<span class="s">"\n前 5 行长这样："</span>)
+print(df.head())</pre>
+      </div>
+      <div class="callout tip">
+        <h4>逐行解释</h4>
+        <p><code>import pandas as pd</code>：把工具箱搬进来，以后都叫它 <code>pd</code>。<br>
+        <code>pd.read_csv(...)</code>：读取文件，变成 pandas 的表格对象（叫 DataFrame，简称 df）。<br>
+        <code>df.shape</code>：表格的形状（行数, 列数）。<br>
+        <code>df["city"].nunique()</code>：city 这一列有多少个不同的值（去重计数）。<br>
+        <code>df.head()</code>：看前 5 行，快速认识数据长什么样。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">6</div><h3>运行它！</h3></div>
+      <p class="note">在命令行里，先把位置"切"到你的文件夹（把下面的路径换成你自己的），再运行：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>命令行（Windows 示例）</span></div>
+        <pre>cd C:\Users\你的用户名\Documents\house-analysis
+python step1_load.py</pre>
+      </div>
+      <p class="note">按下回车，你会看到（这就是本教程真实运行的结果，你的应该一模一样）：</p>
+      <div class="console">数据有多少行、多少列： (15346, 18)
+一共有多少个城市： 209
+
+前 5 行长这样：
+   city community_name district subdistrict    road  ...  longitude  latitude  synthetic
+0   济南  绿地IFC中央公馆B7地块  2023历下         CBD    齐音路  ...  117.104314  36.669668          0
+1   济南  大华紫郡四区(别墅)  2023历下        全运村    龙腾路  ...  117.111796  36.616880          0
+2   济南  海尔绿城全运村麗园  2018历下       全运村  百合东路  ...  117.127695  36.637337          0
+3   济南  中海玖昌源邸(新房)  2027历下  经十路历下段  浆水泉路...  ...  117.132373  36.650873          0
+4   济南     明湖七院  1998历下        泉城路    大明湖路  ...  117.033564  36.673050          0
+
+[5 rows x 18 columns]</div>
+      <div class="callout tip">
+        <h4>🎉 恭喜，你已经完成了数据分析的第一步</h4>
+        <p>屏幕上这几行字意味着：你的电脑已经能处理 15,346 行数据了。中间的 <code>...</code> 是 pandas 怕太宽刷屏，把省略的列折叠了，不是数据丢了。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>附：18 个字段都是什么意思</h2>
+    <p class="sub">分析数据前必须先认识数据。这张表建议收藏，后面每课都会用到。</p>
+    <div class="table-wrap">
+      <table class="data">
+        <tr><th>字段</th><th>含义</th><th>例子 / 说明</th></tr>
+        <tr><td><code>city</code></td><td>城市</td><td>济南、上海、深圳……共 209 个</td></tr>
+        <tr><td><code>community_name</code></td><td>小区名</td><td>绿地IFC中央公馆B7地块</td></tr>
+        <tr><td><code>district</code></td><td>区县（可能带年份前缀）</td><td>"2023历下"——注意这个前缀，第 2 课要处理它</td></tr>
+        <tr><td><code>subdistrict</code></td><td>商圈 / 片区</td><td>CBD、全运村</td></tr>
+        <tr><td><code>road</code></td><td>道路</td><td>齐音路</td></tr>
+        <tr><td><code>nearby</code></td><td>周边配套标签</td><td>"近地铁,近学校,别墅"（缺失最多的一列，约 7804 行没有）</td></tr>
+        <tr><td><code>price</code></td><td><strong>挂牌均价（万/㎡）</strong></td><td>2.5581 = 25,581 元/㎡，<strong>全教程的主角</strong></td></tr>
+        <tr><td><code>price_yuan</code></td><td>挂牌均价（整数元/㎡）</td><td>25581，和 price 是同一信息的两种单位</td></tr>
+        <tr><td><code>original_price</code></td><td>原始价格文本</td><td>"25581 元/m²"（网页上原样抓下来的）</td></tr>
+        <tr><td><code>price_change</code></td><td>价格涨跌幅</td><td>"0.28%"，也可能是"持平"（不是数字，第 2 课处理）</td></tr>
+        <tr><td><code>secondhand_count</code></td><td>该小区二手房挂牌套数</td><td>5</td></tr>
+        <tr><td><code>rent_count</code></td><td>该小区租房挂牌套数</td><td>21</td></tr>
+        <tr><td><code>year_built</code></td><td>建成年份</td><td>2023；约 8000 行没有这个信息</td></tr>
+        <tr><td><code>fetch_date</code></td><td>数据抓取日期</td><td>2026-05-27</td></tr>
+        <tr><td><code>detail_links</code></td><td>原网页链接文本</td><td>分析用不到，纯留档</td></tr>
+        <tr><td><code>longitude</code></td><td>经度</td><td>117.10（约 73.5% 的行有坐标）</td></tr>
+        <tr><td><code>latitude</code></td><td>纬度</td><td>36.67</td></tr>
+        <tr><td><code>synthetic</code></td><td>是否为合成数据</td><td>0=真实抓取，1=合成补位（第 2 课要用它过滤）</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>常见报错急救表</h2>
+    <p class="sub">初学阶段 90% 的卡壳都在这四行里。报错时先来这里对号入座。</p>
+    <div class="table-wrap">
+      <table class="data">
+        <tr><th>报错信息</th><th>原因</th><th>解决办法</th></tr>
+        <tr><td><code>No such file or directory: 'toy_realestate_sample.csv'</code></td><td>CSV 不在当前文件夹，或文件名打错</td><td>确认 CSV 和 .py 在同一文件夹；命令行 <code>cd</code> 到该文件夹再运行</td></tr>
+        <tr><td><code>ModuleNotFoundError: No module named 'pandas'</code></td><td>pandas 没装上，或装到了别的 Python 里</td><td>用 <code>python -m pip install pandas</code> 重装（注意是哪个 python 就用哪个 -m）</td></tr>
+        <tr><td><code>'python' 不是内部或外部命令</code></td><td>安装 Python 时没勾 Add to PATH</td><td>重新运行安装包 → Modify → 勾上 Add python.exe to PATH</td></tr>
+        <tr><td><code>UnicodeDecodeError</code></td><td>读文件没写 encoding</td><td>检查 <code>pd.read_csv(..., encoding="utf-8-sig")</code> 是否原样抄了</td></tr>
+      </table>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习（做完才算学会）</h4>
+    <ol>
+      <li>把 <code>df.head()</code> 改成 <code>df.tail(3)</code>，看看数据的<strong>最后 3 行</strong>长什么样。</li>
+      <li>用一行代码算出：数据里最贵的小区单价是多少万/㎡？（提示：<code>df["price"].max()</code>）</li>
+      <li>数一数数据里出现了多少个不同的<strong>小区名</strong>。（提示：把练习 1 里的 <code>head</code> 换成 <code>nunique</code> 就行……不对，是把 <code>df.head()</code> 换成对 <code>community_name</code> 这一列数）</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre>print(df.tail(3))                      # 练习1
+print(df["price"].max())                # 练习2 → 41.4545（万元/㎡，后面课程会见到它）
+print(df["community_name"].nunique())   # 练习3 → 13091（有小区同名，去重后 1 万多个）</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="index.html"><div class="dir">← 返回</div><div class="title">课程表</div></a>
+    <a class="next" href="lesson2.html"><div class="dir">下一课</div><div class="title">数据清洗：把"脏数据"变干净 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 7 课 · 供需分析：哪些城市在大量卖房</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html" class="active">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 7 课 / 共 8 课</div>
+    <h1>供需分析：哪些城市在大量卖房</h1>
+    <p class="desc">价格是结果，供需是原因。这一课分析两个"量"：每个城市样本内的<strong>二手房挂牌量</strong>和<strong>租房挂牌量</strong>，看看卖房和租房这两种行为之间有没有关系。你还会学到比第 4 课更狠的一课：<strong>样本偏差如何让一个排行榜完全失去意义</strong>。</p>
+    <div class="tags">
+      <span class="tag">双色图表</span>
+      <span class="tag">约 20 分钟</span>
+      <span class="tag">本课产出：挂牌量 Top15 双色条形图 + 相关系数 0.53</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>学会用 sum 做分组汇总（和第 4 课的 median 呼应）</li>
+      <li>画一张双色对比条形图</li>
+      <li>复习相关系数，并识别背后的混杂变量（城市规模）</li>
+      <li>理解"样本内总量"和"城市真实总量"的区别</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>汇总每个城市的挂牌量</h3></div>
+      <p class="note">每一行数据是一个小区，<code>secondhand_count</code> 是这个小区挂着卖的二手房套数。想知道城市层面的量，就把同一城市所有小区的套数<strong>加总</strong>。新建 <code>step7_supply.py</code>：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step7_supply.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+df = df.drop_duplicates()
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+
+city_supply = (
+    df.groupby(<span class="s">"city"</span>)
+      .agg(
+          secondhand=(<span class="s">"secondhand_count"</span>, <span class="s">"sum"</span>),  <span class="cm"># 二手挂牌总量</span>
+          rent=(<span class="s">"rent_count"</span>, <span class="s">"sum"</span>),            <span class="cm"># 租房挂牌总量</span>
+          median_price=(<span class="s">"price"</span>, <span class="s">"median"</span>),       <span class="cm"># 顺手带上中位价</span>
+      )
+      .reset_index()
+)
+
+top15 = city_supply.sort_values(<span class="s">"secondhand"</span>, ascending=<span class="k">False</span>).head(15)
+print(top15[[<span class="s">"city"</span>, <span class="s">"secondhand"</span>, <span class="s">"rent"</span>, <span class="s">"median_price"</span>]].to_string(index=<span class="k">False</span>))
+
+<span class="cm"># 卖房和租房，两种挂牌行为相关吗？</span>
+print(<span class="s">"\n相关系数："</span>, round(city_supply[<span class="s">"secondhand"</span>].corr(city_supply[<span class="s">"rent"</span>]), 3))</pre>
+      </div>
+      <div class="console">        city  secondhand  rent  median_price
+    巴音郭楞        3295   733       0.4540
+        昌吉        3267  1130       0.5080
+        西宁        3205   951       0.8358
+        银川        2852  1163       0.8700
+        合肥        2653   879       0.6265
+        伊犁        2646   950       0.6442
+        包头        2488   738       0.6006
+      克拉玛依        2303   589       0.5308
+        贵阳        2186   770       0.7968
+        绵阳        2176   748       0.7707
+      秦皇岛        2138  1068       0.8585
+        塔城        2062  1021       0.6419
+        宿迁        1962   770       0.6483
+        蚌埠        1809  1156       0.5174
+        无锡        1727   509       2.0038
+
+相关系数： 0.531</div>
+      <div class="callout danger">
+        <h4>⚠️ 先泼一盆冷水：这个 Top15 是"假"的</h4>
+        <p>看到巴音郭楞、昌吉、塔城这些名字霸榜，你的常识应该报警了：全国二手房挂牌量最大的城市怎么会是它们？真正的大户（重庆、成都、武汉）去哪了？</p>
+        <p>原因：<strong>这份数据每个城市只抽样了约 80 个小区</strong>。把 80 个小区的挂牌数相加，得到的是"样本内总量"，它反映的是<strong>这 80 个小区恰好是不是挂牌大户</strong>，而不是城市的真实库存。重庆有几万个小区，80 个样本怎么比总量？</p>
+        <p><strong>结论：这个榜单本身不能用。</strong>但它依然教给我们两件事：① 遇到"反常识榜单"，先回头检查统计口径（样本！样本！样本！）；② 有一类数字<strong>天生怕抽样</strong>——"总量、总和"类指标。而"中位数、比例"类指标（比如中位价）对抽样就稳健得多，这就是为什么本教程的房价分析一直用中位数。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>但相关关系是真实信号</h3></div>
+      <p class="note">虽然总量排名不可信，"二手挂牌 vs 租房挂牌"的<strong>相关系数 0.531</strong>却是站得住的信号——因为相关性只看两个量是否同涨同跌，不依赖绝对值：</p>
+      <div class="callout tip">
+        <h4>怎么理解 0.531 这个数</h4>
+        <p>相关系数范围 -1 ～ +1。0.531 属于<strong>中等正相关</strong>：一个城市的样本内二手房挂牌越多，租房挂牌也倾向于越多。</p>
+        <p>为什么？想想第 6 课的思路——背后还是有个更根本的变量在同时驱动两者：<strong>城市体量</strong>。城市越大、人口流动越活跃，买卖和租赁两个市场就都越大。它俩是"同一枚硬币的两面"，而不是谁导致谁。</p>
+        <p>如果算出来接近 0，说明买卖和租赁互不相干；如果接近 -1，说明一个市场热另一个就冷（比如"卖不动改出租"）。0.53 告诉我们：中国楼市里，<strong>卖和租基本是同冷同热的</strong>。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>画双色对比条形图</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step7_supply.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+plt.rcParams[<span class="s">"font.sans-serif"</span>] = [<span class="s">"Microsoft YaHei"</span>, <span class="s">"PingFang SC"</span>, <span class="s">"SimHei"</span>]
+plt.rcParams[<span class="s">"axes.unicode_minus"</span>] = <span class="k">False</span>
+
+top = city_supply.sort_values(<span class="s">"secondhand"</span>, ascending=<span class="k">False</span>).head(15).iloc[::-1]
+
+fig, ax = plt.subplots(figsize=(8, 4.6))
+<span class="cm"># 同一批城市画两遍：先画长的二手柱，再叠一层短的租房柱</span>
+ax.barh(top[<span class="s">"city"</span>], top[<span class="s">"secondhand"</span>], color=<span class="s">"#2563eb"</span>, label=<span class="s">"二手房挂牌（套）"</span>)
+ax.barh(top[<span class="s">"city"</span>], top[<span class="s">"rent"</span>], color=<span class="s">"#f59e0b"</span>, label=<span class="s">"租房挂牌（套）"</span>)
+ax.set_xlabel(<span class="s">"样本内挂牌总数（套）"</span>)
+ax.set_title(<span class="s">"各城市样本内挂牌量 Top15（注意：非全城总量）"</span>)
+ax.legend(loc=<span class="s">"lower right"</span>)
+plt.tight_layout()
+plt.savefig(<span class="s">"supply_top15.png"</span>, dpi=150)
+plt.show()</pre>
+      </div>
+      <figure class="chart">
+        <img src="assets/charts/supply_top15.svg" alt="城市样本内挂牌量Top15双色条形图">
+        <figcaption>每个城市两根柱子：蓝色是二手房挂牌，橙色叠在下面的是租房挂牌。注意标题特意加了"样本内"三个字——图表标题里写清口径，是分析师的职业道德。</figcaption>
+      </figure>
+      <p class="note">从图上还能直观看一个"租售结构"：昌吉、蚌埠、秦皇岛的橙色柱相对更长（租房挂牌约占二手的 35–60%），而克拉玛依、无锡的橙色柱很短（不到 30%）——租赁市场的相对厚度，城市之间差异很大。</p>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习</h4>
+    <ol>
+      <li>算每个城市的 <code>rent / secondhand</code>（租售比），看看排名前 5 的城市。先猜一猜会不会又撞上"小样本陷阱"？（提示：有些城市 secondhand=0，除法会得到无穷大，注意过滤）</li>
+      <li>用 <code>median_price</code> 和 <code>secondhand</code> 算相关系数：挂牌多的城市更便宜还是更贵？</li>
+      <li>思考题：如果想知道城市<strong>真实的</strong>挂牌总量，这份数据应该怎么改？每城全量抓取，还是抽更多小区？</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre># 练习1：
+valid = city_supply[city_supply["secondhand"] > 0].copy()
+valid["rent_ratio"] = valid["rent"] / valid["secondhand"]
+print(valid.sort_values("rent_ratio", ascending=False).head(5)[["city", "rent_ratio"]])
+# 果然全是小样本城市（山南 n=69 样本、rent_ratio=77；阿勒泰 28.7…）
+# 又一次验证：极端排名的常客都是 n 小的行。
+
+# 练习2：
+print(city_supply["median_price"].corr(city_supply["secondhand"]))  # 约 -0.1 左右，弱负
+# 挂牌多（样本内）的城市房价略低，但很弱，参考意义有限。
+
+# 练习3：全量抓取才能算总量；抽样只能稳妥地估中位数/比例。
+# 这就是统计里的老话：抽样估"平均"，全量算"总量"。</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson6.html"><div class="dir">← 上一课</div><div class="title">楼龄与房价：房子越新越贵吗</div></a>
+    <a class="next" href="lesson8.html"><div class="dir">下一课</div><div class="title">地理可视化：画出房价"星空图" + 结课 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

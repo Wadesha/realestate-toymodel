@@ -1,0 +1,206 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 3 课 · 第一个分析：全国房价长什么样</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html" class="active">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 3 课 / 共 8 课</div>
+    <h1>第一个分析：全国房价长什么样</h1>
+    <p class="desc">数据洗干净了，正式开始分析。这一课用两个最基础的动作——"统计描述"和"直方图"——回答一个问题：<strong>把全国 15,035 个小区放在一起看，房价是什么样子？</strong> 你会发现一个反直觉的事实：平均数居然是中位数的两倍多。</p>
+    <div class="tags">
+      <span class="tag">第一张图</span>
+      <span class="tag">约 25 分钟</span>
+      <span class="tag">本课产出：房价分布图 + 最贵小区 Top10</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>学会用 <code>describe()</code> 五分钟给一列数据"摸底"</li>
+      <li>搞懂平均数和中位数的区别——为什么说房价要用中位数</li>
+      <li>安装 matplotlib，画出人生第一张直方图</li>
+      <li>从 Top 榜里练出"用常识审视结果"的习惯</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>五分钟摸底：describe()</h3></div>
+      <p class="note">新建 <code>step3_overview.py</code>。前几行是老朋友（读文件 + 第 2 课的清洗），保证你每课都能独立运行：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step3_overview.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+df = df.drop_duplicates()
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+
+<span class="cm"># 一行代码，给价格列做全面体检</span>
+print(df[<span class="s">"price"</span>].describe())</pre>
+      </div>
+      <div class="console">count    15035.000000
+mean         1.310425
+std          2.315333
+min          0.100000
+25%          0.460150
+50%          0.610000
+75%          1.000000
+max         41.454500
+Name: price, dtype: float64</div>
+      <div class="table-wrap">
+        <table class="data">
+          <tr><th>输出项</th><th>含义</th><th>本数据的值</th></tr>
+          <tr><td><code>count</code></td><td>有多少个有效数字</td><td>15,035 个小区</td></tr>
+          <tr><td><code>mean</code></td><td>平均数</td><td>1.31 万/㎡</td></tr>
+          <tr><td><code>std</code></td><td>标准差（波动有多大）</td><td>2.32（比平均数还大，说明极度分散）</td></tr>
+          <tr><td><code>min / max</code></td><td>最小 / 最大值</td><td>0.10 万 ～ 41.45 万，相差 400 倍</td></tr>
+          <tr><td><code>25% / 50% / 75%</code></td><td>四分位数</td><td>一半小区在 0.46～1.00 万之间</td></tr>
+        </table>
+      </div>
+      <div class="callout warn">
+        <h4>⏸ 停一下：这里藏着一个大发现</h4>
+        <p><strong>平均数 1.31 万，中位数（50% 那行）只有 0.61 万——平均数是中位数的 2.1 倍！</strong></p>
+        <p>想象一个房间里站着 10 个人，9 个是普通打工人，1 个是首富——"平均收入"会被首富一个人拉上天，但"中位收入"（从低到高排，站中间那位）几乎不变。房价同理：少数 10 万+ 的豪宅把平均数拉高了一倍，<strong>而中位数 0.61 万/㎡ 才代表"典型小区"的价格</strong>。</p>
+        <p>这就是"偏态分布"。以后凡是看到"平均工资""平均房价"，你都要多问一句：中位数是多少？</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>画出来：第一张直方图</h3></div>
+      <p class="note">数字表格不够直观，我们画<strong>直方图</strong>：把 0～3 万切成 40 个格子，数每个格子里落了多少小区。先装画图工具（命令行里运行一次即可，之后所有课共用）：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>命令行</span></div>
+        <pre>python -m pip install matplotlib</pre>
+      </div>
+      <p class="note">然后在 <code>step3_overview.py</code> 末尾追加：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step3_overview.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+<span class="cm"># 让图表能显示中文（Windows 用微软雅黑，Mac 用苹方）</span>
+plt.rcParams[<span class="s">"font.sans-serif"</span>] = [<span class="s">"Microsoft YaHei"</span>, <span class="s">"PingFang SC"</span>, <span class="s">"SimHei"</span>]
+plt.rcParams[<span class="s">"axes.unicode_minus"</span>] = <span class="k">False</span>
+
+<span class="cm"># 只画 0~3 万的部分（覆盖 92.3% 的小区，太贵的挤成一团看不见）</span>
+data = df[df[<span class="s">"price"</span>] <= 3][<span class="s">"price"</span>]
+
+plt.hist(data, bins=40, color=<span class="s">"#2563eb"</span>, edgecolor=<span class="s">"white"</span>)
+plt.axvline(df[<span class="s">"price"</span>].median(), color=<span class="s">"#dc2626"</span>, linestyle=<span class="s">"--"</span>,
+            label=<span class="s">f'中位数 {df["price"].median():.2f} 万'</span>)
+plt.axvline(df[<span class="s">"price"</span>].mean(), color=<span class="s">"#f59e0b"</span>, linestyle=<span class="s">"--"</span>,
+            label=<span class="s">f'平均数 {df["price"].mean():.2f} 万'</span>)
+plt.xlabel(<span class="s">"挂牌均价（万/㎡）"</span>)
+plt.ylabel(<span class="s">"小区数量（个）"</span>)
+plt.title(<span class="s">"全国 15,035 个小区的挂牌单价分布"</span>)
+plt.legend()
+plt.tight_layout()
+plt.savefig(<span class="s">"price_dist.png"</span>, dpi=150)   <span class="cm"># 保存成图片文件</span>
+plt.show()                                                  <span class="cm"># 弹窗展示</span></pre>
+      </div>
+      <div class="callout tip">
+        <h4>为什么中文显示成方框？</h4>
+        <p>matplotlib 默认不带中文字体。上面那两行 <code>plt.rcParams[...]</code> 就是在指定用系统自带的中文字体（Windows: 微软雅黑 / Mac: 苹方）。<strong>以后每张图都要带上这两行</strong>，忘了就会看到一排"口口口"。</p>
+      </div>
+      <p class="note">运行后，会弹出一个窗口，同时文件夹里多出一个 <code>price_dist.png</code>。本教程官网上的版本长这样（同一个代码、同一份数据跑出来的）：</p>
+      <figure class="chart">
+        <img src="assets/charts/price_dist.svg" alt="全国房价分布直方图">
+        <figcaption>全国小区挂牌单价分布。一座"高山"集中在 0.3～1 万/㎡，之后迅速衰减；中位数 0.61 万（红虚线）就站在山顶附近，而平均数 1.31 万（橙虚线）被右侧长尾拖出去很远。</figcaption>
+      </figure>
+      <div class="callout tip">
+        <h4>怎么读这张图</h4>
+        <p>· 横轴是价格（万/㎡），纵轴是这个价格段有多少小区；<br>
+        · 最高峰在 0.4～0.7 万之间——<strong>全国最"典型"的房价就是六七千一平米</strong>；<br>
+        · 我们截断在 3 万，因为超过 3 万的小区只占 7.7%，但最贵到 41 万——这条"长尾"正是平均数被拉高的元凶。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>看看塔尖：最贵的 10 个小区</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step3_overview.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="cm"># 按价格从高到低排序，取前 10 行，只看这 5 列</span>
+top10 = df.nlargest(10, <span class="s">"price"</span>)[
+    [<span class="s">"city"</span>, <span class="s">"community_name"</span>, <span class="s">"price"</span>, <span class="s">"year_built"</span>, <span class="s">"secondhand_count"</span>]
+]
+print(top10.to_string(index=<span class="k">False</span>))</pre>
+      </div>
+      <div class="console">   city      community_name   price  year_built  secondhand_count
+  东莞     三湘海尚(别墅) 41.4545        2010                 2
+  深圳     香山美墅(别墅) 38.8316        2015                 8
+  东莞     香山美墅(别墅) 38.8316        2015                 8
+  深圳   双玺时光道(别墅) 37.5962        2015                 4
+  东莞   双玺时光道(别墅) 37.5962        2015                 4
+  深圳 中旅国际公馆(一期别墅) 32.8901        2005                 4
+  上海       古北壹号(别墅) 30.0000        2015                 0
+  上海           良友别墅 26.5000        1950                 0
+  上海         露香园(别墅) 24.8000        2015                 0
+  深圳       东方花园(别墅) 24.0811        2006                 6</div>
+      <div class="callout egg">
+        <h4>🔍 用常识审视结果（分析师的第二天性）</h4>
+        <p>盯着这份榜单看 10 秒，你能发现三件事：</p>
+        <p><strong>① 全是别墅</strong>——顶级价格的世界里没有普通住宅。买不起，但分析时要想到：别墅的单价逻辑（稀缺、大面积）和普通住宅完全不同。<br>
+        <strong>② "香山美墅""双玺时光道"同时出现在深圳和东莞</strong>，价格一模一样——数据源把临深片区的房源同时挂到了两个城市名下。这是数据的小毛病，好在只影响极少数行。<br>
+        <strong>③ 上海"良友别墅"建于 1950 年</strong>，75 年房龄还卖出 26.5 万/㎡——记住它，第 6 课讲楼龄与房价时它会再次登场，并且会推翻一个直觉。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习</h4>
+    <ol>
+      <li>算出全国小区价格在 1 万/㎡ 以下的比例。（提示：布尔筛选 + <code>mean()</code>）</li>
+      <li>把直方图的 <code>bins=40</code> 改成 <code>bins=10</code> 和 <code>bins=100</code>，看看图形怎么变，感受一下 bins 的含义。</li>
+      <li>找出<strong>最便宜</strong>的 5 个小区（提示：<code>nlargest</code> 的反面是 <code>nsmallest</code>）。</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre># 练习1：约 75.6% 的小区低于 1 万/㎡
+print((df["price"] < 1).mean())          # 0.7561...
+
+# 练习2：bins 是柱子的数量。太少（10）→ 图太粗糙；太多（100）→ 图毛毛躁躁。40 适中。
+
+# 练习3：
+print(df.nsmallest(5, "price")[["city", "community_name", "price"]])
+# 最便宜的是 0.1 万/㎡（1000 元/㎡）的小区——第 4 课会看到它们都在青海的州县</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson2.html"><div class="dir">← 上一课</div><div class="title">数据清洗：把"脏数据"变干净</div></a>
+    <a class="next" href="lesson4.html"><div class="dir">下一课</div><div class="title">城市对比：哪里最贵、哪里最便宜 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

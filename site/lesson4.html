@@ -1,0 +1,211 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 4 课 · 城市对比：哪里最贵、哪里最便宜</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html" class="active">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 4 课 / 共 8 课</div>
+    <h1>城市对比：哪里最贵、哪里最便宜</h1>
+    <p class="desc">上一课把全国当一个整体看，这一课把它拆开：209 个城市各自的中位房价是多少、怎么排名。用到的 <code>groupby</code> 是数据分析使用频率第一名的招式——学会它，你就入门了一半。</p>
+    <div class="tags">
+      <span class="tag">核心招式 groupby</span>
+      <span class="tag">约 25 分钟</span>
+      <span class="tag">本课产出：两张城市排行榜 + 排名条形图</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>掌握 groupby 分组聚合：按城市算中位价、样本量</li>
+      <li>学会排序取 Top（<code>sort_values</code> + <code>head</code>）</li>
+      <li>认识"小样本陷阱"：为什么排名表里必须带上样本量 n</li>
+      <li>画横向条形图（排行榜的正确画法）</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>核心招式：groupby 分组聚合</h3></div>
+      <p class="note">先想清楚我们要什么：<strong>每个城市</strong> × <strong>中位价格 + 样本量</strong>。用 Excel 说，就是插入一张"数据透视表"：行放 city，值放 price 的中位数。pandas 里写出来是这样（新建 <code>step4_city.py</code>）：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step4_city.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+df = df.drop_duplicates()
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+
+<span class="cm"># 按 city 分组，每组算三个指标，然后按中位价从高到低排序</span>
+city_stat = (
+    df.groupby(<span class="s">"city"</span>)
+      .agg(
+          n=(<span class="s">"community_name"</span>, <span class="s">"count"</span>),        <span class="cm"># 每城有几个小区样本</span>
+          median_price=(<span class="s">"price"</span>, <span class="s">"median"</span>),  <span class="cm"># 中位价（万/㎡）</span>
+          mean_price=(<span class="s">"price"</span>, <span class="s">"mean"</span>),      <span class="cm"># 平均价，用来对比</span>
+      )
+      .sort_values(<span class="s">"median_price"</span>, ascending=<span class="k">False</span>)
+      .reset_index()
+)
+
+print(city_stat.head(15).to_string(index=<span class="k">False</span>))</pre>
+      </div>
+      <div class="console">    city   n  median_price  mean_price
+    上海  80      13.5762   14.779295
+    北京  80      12.0175   12.668845
+    深圳  80      11.0602   12.716745
+    东莞  80       9.9637   12.336856
+    宁波  80       7.0588    7.568941
+    广州  80       7.0434    8.210992
+    南京  55       6.6318    7.176776
+    杭州  80       6.5701    7.443785
+    天津  80       6.0567    6.495700
+    宿州  80       3.6683    4.050736
+    成都  80       3.4592    3.791645
+    济南  55       3.2608    3.920487
+    三亚  80       2.8925    3.251626
+    苏州  80       2.7398    2.923245
+    青岛  80       2.6212    2.889519</div>
+      <div class="callout tip">
+        <h4>groupby 到底做了什么？</h4>
+        <p>想象把 15,035 张卡片按城市分成 209 摞，然后对每一摞分别数张数（n）、算中位数、算平均数，最后把 209 个结果拼回一张表。<code>.agg()</code> 括号里的写法 <code>新列名=("原列名", "函数")</code> 就是在说"这一摞要算哪些指标"。</p>
+        <p>注意每个城市的平均价都<strong>高于</strong>中位价——第 3 课的"长尾拉高平均数"在每个城市内部都成立。</p>
+      </div>
+      <div class="callout egg">
+        <h4>🔍 又到了用常识审视结果的时刻</h4>
+        <p>榜单前 9 名（上海→天津）符合直觉，但第 10 名<strong>宿州（安徽）中位 3.67 万，比成都还贵</strong>？这明显反常——真实世界的宿州远没有这个价。原因是这份数据<strong>对宿州的抽样严重偏向了贵的小区</strong>（回忆 README：每城只是抽样，不是全量）。<br><br>
+        教训：<strong>groupby 能一秒出结果，但结果靠不靠谱要你自己判断。</strong>遇到反常识的数字，先怀疑数据，再怀疑代码，最后才考虑"新发现"。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>两张排行榜</h3></div>
+      <p class="note">条形图是排行榜的最佳形态。先画最贵的 15 城：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step4_city.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+plt.rcParams[<span class="s">"font.sans-serif"</span>] = [<span class="s">"Microsoft YaHei"</span>, <span class="s">"PingFang SC"</span>, <span class="s">"SimHei"</span>]
+plt.rcParams[<span class="s">"axes.unicode_minus"</span>] = <span class="k">False</span>
+
+top15 = city_stat.head(15)
+
+fig, ax = plt.subplots(figsize=(8, 4.6))
+<span class="cm"># 注意：城市名从下往上排（[::-1]），否则第一名在最下面</span>
+ax.barh(top15[<span class="s">"city"</span>][::-1], top15[<span class="s">"median_price"</span>][::-1],
+        color=<span class="s">"#2563eb"</span>, height=0.62)
+ax.set_xlabel(<span class="s">"中位挂牌单价（万/㎡）"</span>)
+ax.set_title(<span class="s">"城市房价天花板：中位单价最贵的 15 城"</span>)
+plt.tight_layout()
+plt.savefig(<span class="s">"city_top15.png"</span>, dpi=150)
+plt.show()</pre>
+      </div>
+      <figure class="chart">
+        <img src="assets/charts/city_top15.svg" alt="城市房价Top15条形图">
+        <figcaption>最贵 15 城。上海一骑绝尘（13.58 万/㎡），北京、深圳、东莞紧随其后；前 9 名和第 10 名之间存在明显断层（6 万 → 3.7 万）。</figcaption>
+      </figure>
+      <p class="note">把 <code>head(15)</code> 换成 <code>tail(10)</code>（再倒序）就是最便宜的 10 城：</p>
+      <figure class="chart">
+        <img src="assets/charts/city_bottom10.svg" alt="城市房价Bottom10条形图">
+        <figcaption>最便宜 10 城。中位价全部低于 0.34 万/㎡——也就是 3400 元/㎡ 以下。仔细看城市名：果洛、海北、玉树、海西、黄南、海南州……<strong>清一色的青海州县</strong>，再加上新疆吐鲁番和铜川、萍乡、怀化。</figcaption>
+      </figure>
+      <div class="callout warn">
+        <h4>⚠️ 小样本陷阱：排行榜里藏着地雷</h4>
+        <p>回看最便宜榜单，把 n 列带上再看一遍：</p>
+        <div class="table-wrap">
+          <table class="data">
+            <tr><th>城市</th><th class="num">中位价（万）</th><th class="num">样本量 n</th></tr>
+            <tr><td>果洛</td><td class="num">0.20</td><td class="num"><strong>6</strong></td></tr>
+            <tr><td>玉树</td><td class="num">0.26</td><td class="num"><strong>14</strong></td></tr>
+            <tr><td>海西</td><td class="num">0.26</td><td class="num"><strong>14</strong></td></tr>
+            <tr><td>黄南</td><td class="num">0.27</td><td class="num"><strong>17</strong></td></tr>
+            <tr><td>吐鲁番</td><td class="num">0.28</td><td class="num">80</td></tr>
+          </table>
+        </div>
+        <p>用 6 个小区给一座城市下"全国最便宜"的结论，说服力很弱——运气不好抽到 6 个便宜盘就垫底了。<strong>这是数据分析的经典陷阱：数字看起来很确定，背后却是小样本。</strong>处理办法：给排行榜加一条样本量门槛，比如 <code>city_stat[city_stat["n"] >= 30]</code>，把 n 太小的城市先筛掉，或者至少在图表下方注明 n。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>换个玩法：城市内部的贫富差距</h3></div>
+      <p class="note">每个城市内部，最贵小区是便宜小区的几倍？这个"分化倍数"能看出哪些城市豪宅和刚需房差距悬殊：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step4_city.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre>city_stat[<span class="s">"spread_ratio"</span>] = city_stat[<span class="s">"max_price"</span> / city_stat[<span class="s">"min_price"</span>]
+
+<span class="cm"># 注意：max/min 也要在前面 agg 里加上，像这样：</span>
+<span class="cm">#   max_price=("price", "max"), min_price=("price", "min")</span>
+
+polarized = city_stat.sort_values(<span class="s">"spread_ratio"</span>, ascending=<span class="k">False</span>).head(3)
+print(polarized[[<span class="s">"city"</span>, <span class="s">"min_price"</span>, <span class="s">"max_price"</span>, <span class="s">"spread_ratio"</span>]].to_string(index=<span class="k">False</span>))</pre>
+      </div>
+      <div class="console">            city  min_price  max_price  spread_ratio
+海南藏族自治州       0.10       1.80          18.00
+        东营       0.40       4.33          10.85
+        郑州       1.13      10.86           9.61</div>
+      <p class="note">同一个城市里，最贵的小区能达到最便宜的 10～18 倍。郑州 1.13 万的刚需盘和 10.86 万的北龙湖豪宅共享同一个城市名——"城市的平均房价"这七个字，有时候掩盖了两个世界。</p>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习</h4>
+    <ol>
+      <li>找到<strong>你所在城市</strong>的中位房价和全国排名。（提示：先 reset_index，然后用布尔筛选 <code>city_stat[city_stat["city"] == "你的城市"]</code>；排名可以用 <code>city_stat["city"].tolist().index("你的城市") + 1</code>）</li>
+      <li>给最贵 15 城的条形图上，在每个条末端标上数值（提示：<code>ax.text()</code>，可以回头看官网源码里的写法）。</li>
+      <li>用 n≥30 过滤后重画"最便宜 10 城"，看看榜单有什么变化。</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre># 练习1 示例（以武汉为例）：
+cities = city_stat["city"].tolist()
+my = city_stat[city_stat["city"] == "武汉"]
+print(my[["city", "n", "median_price"]])
+print("全国排名:", cities.index("武汉") + 1)   # 武汉中位 2.07 万，第 21 名左右
+
+# 练习2 关键行（数值 = 条长 + 一点偏移）：
+for i, v in enumerate(top15["median_price"][::-1]):
+    ax.text(v + 0.15, i, f"{v:.2f}", va="center", fontsize=10)
+
+# 练习3：过滤断崖式小样本后，吐鲁番（n=80）大概率登上"最便宜"榜首，
+# 青海州县们因为 n 太小被过滤——榜单更可信了，这就是"样本量门槛"的意义。</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson3.html"><div class="dir">← 上一课</div><div class="title">第一个分析：全国房价长什么样</div></a>
+    <a class="next" href="lesson5.html"><div class="dir">下一课</div><div class="title">深入一座城：成都哪个区最贵 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

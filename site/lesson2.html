@@ -1,0 +1,247 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 2 课 · 数据清洗：把"脏数据"变干净</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html" class="active">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 2 课 / 共 8 课</div>
+    <h1>数据清洗：把"脏数据"变干净</h1>
+    <p class="desc">真实世界的数据几乎没有"拿来就能用"的：有重复行、有缺失值、有格式乱七八糟的字段。数据分析师 60% 的时间都花在清洗上。这一课我们把 15,346 行"毛坯数据"处理成 15,035 行"能直接分析的精装数据"。</p>
+    <div class="tags">
+      <span class="tag">核心技能</span>
+      <span class="tag">约 25 分钟</span>
+      <span class="tag">本课产出：15,035 行干净数据</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>学会给数据做"体检"：一行代码查出每列缺了多少</li>
+      <li>掌握四板斧：去重、去合成数据、去无效行、修字段</li>
+      <li>理解一个重要原则：<strong>不是所有缺失值都要删</strong></li>
+      <li>体验一次"数据体检"带来的意外发现</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>先想清楚：为什么必须清洗</h2>
+    <div class="concepts">
+      <div class="concept">
+        <h4>重复行</h4>
+        <p>同一小区被网页反复抓取，就会在数据里出现多次。不处理的话，它会被重复计算，把平均值"算重"。</p>
+      </div>
+      <div class="concept">
+        <h4>合成数据</h4>
+        <p>这份数据对个别没有数据的城市补了少量"编造"的行，已用 synthetic=1 标记。分析真实房价前必须剔掉，否则会污染结果。</p>
+      </div>
+      <div class="concept">
+        <h4>缺失值</h4>
+        <p>有些列信息不全（比如 8000 多行没有建成年份）。缺就缺了？还是要删行？——取决于你分析什么，本课会给出判断原则。</p>
+      </div>
+      <div class="concept">
+        <h4>脏字段</h4>
+        <p>"2023历下"把年份和区县挤在一起；"0.28%"和"持平"混在同一列。这种列要拆开、转成数字才能用。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>体检：每列缺了多少？</h3></div>
+      <p class="note">老规矩，每课代码都能独立运行。新建 <code>step2_clean.py</code>：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step2_clean.py · 第 1 段</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+
+<span class="cm"># 逐列统计缺失（NaN）数量，从多到少排序</span>
+print(df.isna().sum().sort_values(ascending=<span class="k">False</span>).head(6))</pre>
+      </div>
+      <div class="console">year_built      8041
+nearby          7804
+longitude       4062
+latitude        4062
+price_change      97
+road              44
+dtype: int64</div>
+      <p class="note">解读：建成年份缺 8041 行、周边配套标签缺 7804 行、经纬度缺 4062 行。看到这个先别慌——</p>
+      <div class="callout tip">
+        <h4>关键原则：按需清洗，不是见缺就删</h4>
+        <p>缺失值要不要处理，取决于你<strong>这个分析用不用这列</strong>：</p>
+        <p>· 第 6 课要分析楼龄 → 到时只对 year_built 缺失的行做处理，现在不动；<br>
+        · 第 8 课要画地图 → 到时只保留有经纬度的行；<br>
+        · <strong>但 price（价格）缺失的行，几乎所有分析都用不了 → 现在就删。</strong></p>
+        <p>一刀切把 8000 多行全删掉会损失一半数据，那样反而错了。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>第一板斧：去重</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step2_clean.py · 第 2 段</span><button class="copy">复制代码</button></div>
+        <pre><span class="cm"># 先数一数有多少重复行</span>
+print(<span class="s">"重复行数量："</span>, df.duplicated().sum())
+
+<span class="cm"># 删掉它们，并立刻覆盖原表</span>
+df = df.drop_duplicates()
+print(<span class="s">"去重后："</span>, df.shape)</pre>
+      </div>
+      <div class="console">重复行数量： 250
+去重后： (15096, 18)</div>
+      <p class="note">删掉 250 行完全一样的记录，15,346 → 15,096。<code>drop_duplicates()</code> 只删"每一列都相同"的行，所以不会误伤同小区的不同记录。</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>第二板斧：剔除合成数据</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step2_clean.py · 第 3 段</span><button class="copy">复制代码</button></div>
+        <pre><span class="cm"># synthetic=1 的是补位用的编造数据，只留真实的</span>
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+
+<span class="cm"># 第三板斧：删掉没有价格的行（没有价格就没法做房价分析）</span>
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+
+print(<span class="s">"清洗后："</span>, df.shape)</pre>
+      </div>
+      <div class="console">清洗后： (15035, 18)</div>
+      <p class="note">又剔掉 44 行合成数据和 17 行无价格数据。现在表里 15,035 行，每一行都是<strong>真实小区 + 有价格</strong>。</p>
+      <div class="callout tip">
+        <h4>df[条件] 是什么意思？</h4>
+        <p><code>df[df["synthetic"] == 0]</code> 读作"从 df 里挑出 synthetic 等于 0 的那些行"。方括号里放条件，就得到一张只含满足条件行的新表——这是 pandas 最核心的用法之一，第 5 课会大量使用。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">4</div><h3>第四板斧：修理两个"脏"字段</h3></div>
+      <p class="note">先看看脏在哪。区县列是这样的：</p>
+      <div class="console">df["district"].head(3) 的值： '2023历下'   '2023历下'   '2018历下'</div>
+      <p class="note">年份黏在区县前面，而且涨跌幅列里"0.28%"是文字、"持平"也是文字，没法直接算。用下面的代码各给它们"整容"：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step2_clean.py · 第 4 段</span><button class="copy">复制代码</button></div>
+        <pre><span class="cm"># ① 拆区县：把开头的连续 4 个数字删掉，"2023历下"→"历下"</span>
+df[<span class="s">"district_clean"</span>] = df[<span class="s">"district"</span>].astype(str).str.replace(
+    <span class="s">r"^\d{4}"</span>, <span class="s">""</span>, regex=<span class="k">True</span>)
+
+<span class="cm"># ② 解析涨跌幅："0.28%"→0.28，"持平"→0.0，其他→NaN</span>
+<span class="k">def</span> parse_change(v):
+    <span class="k">if</span> pd.isna(v):                <span class="cm"># 空值</span>
+        <span class="k">return</span> <span class="s">"NaN"</span>          <span class="cm"># 先占位，下面统一转回缺失</span>
+    s = str(v)
+    <span class="k">if</span> s <span class="k">in</span> (<span class="s">"持平"</span>, <span class="s">"模拟"</span>):  <span class="cm"># 文字 → 数字 0</span>
+        <span class="k">return</span> <span class="s">"0.0"</span>
+    <span class="k">return</span> s.replace(<span class="s">"%"</span>, <span class="s">""</span>)   <span class="cm"># "0.28%" → "0.28"</span>
+
+df[<span class="s">"price_change_pct"</span>] = (
+    df[<span class="s">"price_change"</span>].apply(parse_change)   <span class="cm"># 逐行套用上面的函数</span>
+      .replace(<span class="s">"NaN"</span>, <span class="k">None</span>)
+      .astype(<span class="s">"float64"</span>)                  <span class="cm"># 文字 → 小数</span>
+)
+
+print(df[[<span class="s">"district"</span>, <span class="s">"district_clean"</span>, <span class="s">"price_change"</span>, <span class="s">"price_change_pct"</span>]].head(3))</pre>
+      </div>
+      <div class="console">   district district_clean price_change price_change_pct
+0  2023历下           历下        0.28%             0.28
+1  2023历下           历下        2.42%             2.42
+2  2018历下           历下        0.57%             0.57</div>
+      <p class="note">两列焕然一新：<code>district_clean</code> 是干净区县名，<code>price_change_pct</code> 是能直接求平均的数字。注意 <code>r"^\d{4}"</code> 是"正则表达式"，意思是"开头的 4 位数字"——现在不用深究，记住这个套路即可。</p>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">5</div><h3>验收：清洗前后对比</h3></div>
+      <div class="table-wrap">
+        <table class="data">
+          <tr><th>步骤</th><th>动作</th><th class="num">剩余行数</th></tr>
+          <tr><td>原始数据</td><td>—</td><td class="num">15,346</td></tr>
+          <tr><td>去重</td><td>删 250 行完全重复</td><td class="num">15,096</td></tr>
+          <tr><td>去合成数据</td><td>删 44 行 synthetic=1</td><td class="num">15,052</td></tr>
+          <tr><td>去无价格行</td><td>删 17 行 price 缺失/为 0</td><td class="num"><strong>15,035</strong></td></tr>
+        </table>
+      </div>
+      <p class="note">这 15,035 行就是后面 6 节课的"舞台"。</p>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>彩蛋：一次真实的"数据体检"发现</h2>
+    <p class="sub">清洗字段时顺手做的一次抽查，发现了一个大问题——这正是数据清洗的价值。</p>
+    <p>把 <code>district_clean</code> 做出来后，我们自然会想检查"每个城市都有哪些区县"。于是看了一眼<strong>西安</strong>：</p>
+    <div class="codeblock">
+      <div class="cb-head"><span>命令</span><button class="copy">复制代码</button></div>
+      <pre><span class="cm"># 看西安的行都来自哪些"区县"</span>
+print(df[df[<span class="s">"city"</span>] == <span class="s">"西安"</span>][<span class="s">"district_clean"</span>].value_counts())</pre>
+    </div>
+    <div class="console">离石    42
+孝义    21
+文水     7
+中阳     2
+汾阳     2
+柳林     2
+兴县     1
+临县     1
+Name: district_clean, dtype: int64</div>
+    <div class="callout egg">
+      <h4>🔍 发现问题了没？</h4>
+      <p>离石、孝义、文水……这些根本<strong>不是西安的区县，全部是山西吕梁的</strong>！这份数据在抓取时把西安和吕梁弄串了。如果直接拿去分析"西安各区县房价"，结论会错得离谱。</p>
+      <p><strong>两个教训：</strong>① 分析前永远做一次这类"常识核对"（city 和 district 对不对得上）；② 发现某列数据可疑时，宁可不分析它，也不要硬编一个结论。</p>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习</h4>
+    <ol>
+      <li>统计 <code>nearby</code> 列的缺失比例（提示：<code>df["nearby"].isna().mean()</code>，会得到一个小数，乘 100 就是百分比）。</li>
+      <li>用"体检"的方法，看看 <strong>上海</strong>的区县有没有类似西安的串号问题。</li>
+      <li>思考题：如果第 6 课要分析"楼龄与房价"，year_built 那 8000 多行的缺失应该怎么办——是删掉，还是保留但分析时单独处理？</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre># 练习1：缺失比例约 51.9%——一半以上的小区没有配套标签
+print(df["nearby"].isna().mean())          # 0.5194...
+
+# 练习2：上海的区县是 徐汇35 浦东13 黄浦13 静安7 长宁5… 都是上海真实的区，正常
+print(df[df["city"] == "上海"]["district_clean"].value_counts())
+
+# 练习3：保留整表，分析时只取 year_built 不缺的行（df.dropna(subset=["year_built"])）。
+# 因为楼龄分析用不到的行（比如画全国地图）依然有价值，删了就浪费了。</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson1.html"><div class="dir">← 上一课</div><div class="title">准备工作：让电脑能跑 Python</div></a>
+    <a class="next" href="lesson3.html"><div class="dir">下一课</div><div class="title">第一个分析：全国房价长什么样 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

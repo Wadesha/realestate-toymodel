@@ -1,0 +1,2211 @@
+{
+  "raw_shape": [
+    15346,
+    18
+  ],
+  "raw_cols": [
+    "city",
+    "community_name",
+    "district",
+    "subdistrict",
+    "road",
+    "nearby",
+    "price",
+    "price_yuan",
+    "original_price",
+    "price_change",
+    "secondhand_count",
+    "rent_count",
+    "year_built",
+    "fetch_date",
+    "detail_links",
+    "longitude",
+    "latitude",
+    "synthetic"
+  ],
+  "missing": {
+    "district": 44,
+    "subdistrict": 44,
+    "road": 44,
+    "nearby": 7804,
+    "price": 17,
+    "price_yuan": 17,
+    "original_price": 17,
+    "price_change": 97,
+    "year_built": 8041,
+    "detail_links": 44,
+    "longitude": 4062,
+    "latitude": 4062
+  },
+  "n_cities": 209,
+  "n_duplicated": 250,
+  "shape_after_dedup": [
+    15096,
+    18
+  ],
+  "shape_clean": [
+    15035,
+    18
+  ],
+  "n_price_change_ok": 14955,
+  "clean_median_price": 0.61,
+  "clean_mean_price": 1.3104485001662787,
+  "geo_coverage": 0.7356168939142002,
+  "price_describe": {
+    "count": 15035.0,
+    "mean": 1.3104,
+    "std": 2.3153,
+    "min": 0.1,
+    "25%": 0.4602,
+    "50%": 0.61,
+    "75%": 1.0,
+    "max": 41.4545
+  },
+  "under3_ratio": 0.9231792484203525,
+  "top10_communities": [
+    {
+      "city": "东莞",
+      "community_name": "三湘海尚(别墅)",
+      "price": 41.4545,
+      "year_built": 2010.0,
+      "secondhand_count": 2
+    },
+    {
+      "city": "深圳",
+      "community_name": "香山美墅(别墅)",
+      "price": 38.8316,
+      "year_built": 2015.0,
+      "secondhand_count": 8
+    },
+    {
+      "city": "东莞",
+      "community_name": "香山美墅(别墅)",
+      "price": 38.8316,
+      "year_built": 2015.0,
+      "secondhand_count": 8
+    },
+    {
+      "city": "深圳",
+      "community_name": "双玺时光道(别墅)",
+      "price": 37.5962,
+      "year_built": 2015.0,
+      "secondhand_count": 4
+    },
+    {
+      "city": "东莞",
+      "community_name": "双玺时光道(别墅)",
+      "price": 37.5962,
+      "year_built": 2015.0,
+      "secondhand_count": 4
+    },
+    {
+      "city": "深圳",
+      "community_name": "中旅国际公馆(一期别墅)",
+      "price": 32.8901,
+      "year_built": 2005.0,
+      "secondhand_count": 4
+    },
+    {
+      "city": "上海",
+      "community_name": "古北壹号(别墅)",
+      "price": 30.0,
+      "year_built": 2015.0,
+      "secondhand_count": 0
+    },
+    {
+      "city": "上海",
+      "community_name": "良友别墅",
+      "price": 26.5,
+      "year_built": 1950.0,
+      "secondhand_count": 0
+    },
+    {
+      "city": "上海",
+      "community_name": "露香园(别墅)",
+      "price": 24.8,
+      "year_built": 2015.0,
+      "secondhand_count": 0
+    },
+    {
+      "city": "深圳",
+      "community_name": "东方花园(别墅)",
+      "price": 24.0811,
+      "year_built": 2006.0,
+      "secondhand_count": 6
+    }
+  ],
+  "city_table_all": [
+    {
+      "city": "上海",
+      "n": 80,
+      "median_price": 13.5762,
+      "mean_price": 14.779295,
+      "min_price": 12.1,
+      "max_price": 30.0
+    },
+    {
+      "city": "北京",
+      "n": 80,
+      "median_price": 12.0175,
+      "mean_price": 12.668845000000001,
+      "min_price": 10.7,
+      "max_price": 21.0
+    },
+    {
+      "city": "深圳",
+      "n": 80,
+      "median_price": 11.06025,
+      "mean_price": 12.716745,
+      "min_price": 8.3944,
+      "max_price": 38.8316
+    },
+    {
+      "city": "东莞",
+      "n": 80,
+      "median_price": 9.9637,
+      "mean_price": 12.33685625,
+      "min_price": 8.41,
+      "max_price": 41.4545
+    },
+    {
+      "city": "宁波",
+      "n": 80,
+      "median_price": 7.0588,
+      "mean_price": 7.56894125,
+      "min_price": 5.4349,
+      "max_price": 16.1051
+    },
+    {
+      "city": "广州",
+      "n": 80,
+      "median_price": 7.04345,
+      "mean_price": 8.2109925,
+      "min_price": 5.7027,
+      "max_price": 23.7
+    },
+    {
+      "city": "南京",
+      "n": 55,
+      "median_price": 6.6318,
+      "mean_price": 7.176776363636363,
+      "min_price": 3.7716,
+      "max_price": 15.4
+    },
+    {
+      "city": "杭州",
+      "n": 80,
+      "median_price": 6.5701,
+      "mean_price": 7.443785,
+      "min_price": 5.4684,
+      "max_price": 18.8638
+    },
+    {
+      "city": "天津",
+      "n": 80,
+      "median_price": 6.056649999999999,
+      "mean_price": 6.495699999999999,
+      "min_price": 4.44,
+      "max_price": 10.77
+    },
+    {
+      "city": "宿州",
+      "n": 80,
+      "median_price": 3.6683,
+      "mean_price": 4.05073625,
+      "min_price": 3.1,
+      "max_price": 7.29
+    },
+    {
+      "city": "成都",
+      "n": 80,
+      "median_price": 3.4592,
+      "mean_price": 3.791645,
+      "min_price": 2.9,
+      "max_price": 8.5
+    },
+    {
+      "city": "济南",
+      "n": 55,
+      "median_price": 3.2608,
+      "mean_price": 3.920487272727273,
+      "min_price": 1.8492,
+      "max_price": 11.6451
+    },
+    {
+      "city": "三亚",
+      "n": 80,
+      "median_price": 2.8925,
+      "mean_price": 3.2516262499999997,
+      "min_price": 2.16,
+      "max_price": 8.7
+    },
+    {
+      "city": "苏州",
+      "n": 80,
+      "median_price": 2.73975,
+      "mean_price": 2.923245,
+      "min_price": 2.52,
+      "max_price": 9.5767
+    },
+    {
+      "city": "青岛",
+      "n": 80,
+      "median_price": 2.62115,
+      "mean_price": 2.8895187499999997,
+      "min_price": 2.3,
+      "max_price": 5.9557
+    },
+    {
+      "city": "厦门",
+      "n": 80,
+      "median_price": 2.3099999999999996,
+      "mean_price": 2.6379662500000003,
+      "min_price": 1.81,
+      "max_price": 5.8
+    },
+    {
+      "city": "温州",
+      "n": 80,
+      "median_price": 2.26245,
+      "mean_price": 2.5026800000000002,
+      "min_price": 1.81,
+      "max_price": 4.8117
+    },
+    {
+      "city": "郑州",
+      "n": 56,
+      "median_price": 2.2164,
+      "mean_price": 3.572798214285714,
+      "min_price": 1.13,
+      "max_price": 10.8571
+    },
+    {
+      "city": "哈尔滨",
+      "n": 80,
+      "median_price": 2.1444,
+      "mean_price": 2.4152862500000003,
+      "min_price": 1.71,
+      "max_price": 7.2017
+    },
+    {
+      "city": "大连",
+      "n": 80,
+      "median_price": 2.1369,
+      "mean_price": 2.41850875,
+      "min_price": 1.7014,
+      "max_price": 7.2017
+    },
+    {
+      "city": "武汉",
+      "n": 80,
+      "median_price": 2.07135,
+      "mean_price": 2.2414375,
+      "min_price": 1.6597,
+      "max_price": 3.5526
+    },
+    {
+      "city": "泉州",
+      "n": 80,
+      "median_price": 2.05095,
+      "mean_price": 2.16120625,
+      "min_price": 1.61,
+      "max_price": 3.6921
+    },
+    {
+      "city": "长春",
+      "n": 80,
+      "median_price": 2.0223500000000003,
+      "mean_price": 2.36888,
+      "min_price": 1.58,
+      "max_price": 7.5219
+    },
+    {
+      "city": "无锡",
+      "n": 80,
+      "median_price": 2.0038,
+      "mean_price": 2.15499125,
+      "min_price": 1.39,
+      "max_price": 4.9981
+    },
+    {
+      "city": "中山",
+      "n": 80,
+      "median_price": 1.8732,
+      "mean_price": 2.037825,
+      "min_price": 1.4458,
+      "max_price": 4.42
+    },
+    {
+      "city": "海口",
+      "n": 80,
+      "median_price": 1.8381500000000002,
+      "mean_price": 2.0042437499999997,
+      "min_price": 1.51,
+      "max_price": 4.6681
+    },
+    {
+      "city": "重庆",
+      "n": 80,
+      "median_price": 1.81505,
+      "mean_price": 2.13947625,
+      "min_price": 1.5612,
+      "max_price": 6.7957
+    },
+    {
+      "city": "沈阳",
+      "n": 80,
+      "median_price": 1.8,
+      "mean_price": 2.04496,
+      "min_price": 1.5682,
+      "max_price": 4.8956
+    },
+    {
+      "city": "佛山",
+      "n": 80,
+      "median_price": 1.8,
+      "mean_price": 2.01776625,
+      "min_price": 1.4475,
+      "max_price": 5.3832
+    },
+    {
+      "city": "珠海",
+      "n": 80,
+      "median_price": 1.60005,
+      "mean_price": 1.94960125,
+      "min_price": 1.28,
+      "max_price": 5.8423
+    },
+    {
+      "city": "乌鲁木齐",
+      "n": 61,
+      "median_price": 1.5832,
+      "mean_price": 2.3187754098360656,
+      "min_price": 0.9123,
+      "max_price": 5.0
+    },
+    {
+      "city": "烟台",
+      "n": 78,
+      "median_price": 1.5801,
+      "mean_price": 1.8172128205128206,
+      "min_price": 0.6508,
+      "max_price": 5.51
+    },
+    {
+      "city": "兰州",
+      "n": 80,
+      "median_price": 1.4306999999999999,
+      "mean_price": 1.55113375,
+      "min_price": 1.2195,
+      "max_price": 2.7034
+    },
+    {
+      "city": "南宁",
+      "n": 80,
+      "median_price": 1.42195,
+      "mean_price": 1.59596625,
+      "min_price": 1.17,
+      "max_price": 3.6307
+    },
+    {
+      "city": "日喀则",
+      "n": 80,
+      "median_price": 1.29,
+      "mean_price": 1.3784625,
+      "min_price": 0.9639,
+      "max_price": 2.4787
+    },
+    {
+      "city": "扬州",
+      "n": 80,
+      "median_price": 1.21,
+      "mean_price": 1.40918125,
+      "min_price": 0.8758,
+      "max_price": 7.5748
+    },
+    {
+      "city": "南通",
+      "n": 80,
+      "median_price": 1.1848,
+      "mean_price": 1.45164125,
+      "min_price": 0.99,
+      "max_price": 4.2952
+    },
+    {
+      "city": "呼和浩特",
+      "n": 68,
+      "median_price": 1.10975,
+      "mean_price": 1.2971970588235295,
+      "min_price": 0.847,
+      "max_price": 2.5507
+    },
+    {
+      "city": "惠州",
+      "n": 80,
+      "median_price": 1.1,
+      "mean_price": 1.32475875,
+      "min_price": 0.875,
+      "max_price": 3.7762
+    },
+    {
+      "city": "拉萨",
+      "n": 80,
+      "median_price": 1.045,
+      "mean_price": 1.1958875,
+      "min_price": 0.6446,
+      "max_price": 2.5767
+    },
+    {
+      "city": "泰安",
+      "n": 69,
+      "median_price": 1.0328,
+      "mean_price": 1.4850985507246377,
+      "min_price": 0.6236,
+      "max_price": 5.2501
+    },
+    {
+      "city": "徐州",
+      "n": 80,
+      "median_price": 0.9512,
+      "mean_price": 1.093075,
+      "min_price": 0.71,
+      "max_price": 2.7
+    },
+    {
+      "city": "廊坊",
+      "n": 80,
+      "median_price": 0.9511000000000001,
+      "mean_price": 1.05698125,
+      "min_price": 0.75,
+      "max_price": 1.95
+    },
+    {
+      "city": "泰州",
+      "n": 78,
+      "median_price": 0.91,
+      "mean_price": 1.0178307692307693,
+      "min_price": 0.8,
+      "max_price": 2.44
+    },
+    {
+      "city": "常州",
+      "n": 80,
+      "median_price": 0.9073,
+      "mean_price": 1.00658625,
+      "min_price": 0.71,
+      "max_price": 2.2
+    },
+    {
+      "city": "潍坊",
+      "n": 73,
+      "median_price": 0.8817,
+      "mean_price": 1.1405027397260272,
+      "min_price": 0.66,
+      "max_price": 3.5378
+    },
+    {
+      "city": "济宁",
+      "n": 50,
+      "median_price": 0.87435,
+      "mean_price": 1.239158,
+      "min_price": 0.595,
+      "max_price": 3.1021
+    },
+    {
+      "city": "银川",
+      "n": 80,
+      "median_price": 0.87,
+      "mean_price": 0.94456875,
+      "min_price": 0.7104,
+      "max_price": 2.2085
+    },
+    {
+      "city": "威海",
+      "n": 79,
+      "median_price": 0.86,
+      "mean_price": 0.9649949367088607,
+      "min_price": 0.5723,
+      "max_price": 3.4285
+    },
+    {
+      "city": "秦皇岛",
+      "n": 80,
+      "median_price": 0.8585,
+      "mean_price": 0.9641125,
+      "min_price": 0.5973,
+      "max_price": 3.6097
+    },
+    {
+      "city": "临沂",
+      "n": 66,
+      "median_price": 0.85,
+      "mean_price": 1.3198530303030303,
+      "min_price": 0.6559,
+      "max_price": 3.375
+    },
+    {
+      "city": "连云港",
+      "n": 80,
+      "median_price": 0.8492,
+      "mean_price": 0.8992625000000001,
+      "min_price": 0.67,
+      "max_price": 1.643
+    },
+    {
+      "city": "西宁",
+      "n": 80,
+      "median_price": 0.83575,
+      "mean_price": 0.9379612500000001,
+      "min_price": 0.69,
+      "max_price": 1.8951
+    },
+    {
+      "city": "聊城",
+      "n": 73,
+      "median_price": 0.83,
+      "mean_price": 1.0845397260273972,
+      "min_price": 0.583,
+      "max_price": 2.7213
+    },
+    {
+      "city": "盐城",
+      "n": 80,
+      "median_price": 0.815,
+      "mean_price": 0.88525875,
+      "min_price": 0.65,
+      "max_price": 1.8
+    },
+    {
+      "city": "贵阳",
+      "n": 80,
+      "median_price": 0.7967500000000001,
+      "mean_price": 0.8587037499999999,
+      "min_price": 0.64,
+      "max_price": 1.7863
+    },
+    {
+      "city": "镇江",
+      "n": 80,
+      "median_price": 0.795,
+      "mean_price": 0.9513675000000001,
+      "min_price": 0.604,
+      "max_price": 4.4229
+    },
+    {
+      "city": "昆明",
+      "n": 80,
+      "median_price": 0.79235,
+      "mean_price": 0.8432299999999999,
+      "min_price": 0.64,
+      "max_price": 1.51
+    },
+    {
+      "city": "桂林",
+      "n": 80,
+      "median_price": 0.79,
+      "mean_price": 0.88792375,
+      "min_price": 0.58,
+      "max_price": 2.25
+    },
+    {
+      "city": "唐山",
+      "n": 80,
+      "median_price": 0.78885,
+      "mean_price": 0.88022125,
+      "min_price": 0.6,
+      "max_price": 2.34
+    },
+    {
+      "city": "保定",
+      "n": 80,
+      "median_price": 0.78775,
+      "mean_price": 0.8379574999999999,
+      "min_price": 0.685,
+      "max_price": 1.41
+    },
+    {
+      "city": "绵阳",
+      "n": 80,
+      "median_price": 0.7706500000000001,
+      "mean_price": 0.7936875,
+      "min_price": 0.64,
+      "max_price": 1.15
+    },
+    {
+      "city": "邯郸",
+      "n": 80,
+      "median_price": 0.76405,
+      "mean_price": 0.89069875,
+      "min_price": 0.67,
+      "max_price": 1.6413
+    },
+    {
+      "city": "芜湖",
+      "n": 79,
+      "median_price": 0.739,
+      "mean_price": 0.8532974683544303,
+      "min_price": 0.6041,
+      "max_price": 2.6759
+    },
+    {
+      "city": "平顶山",
+      "n": 80,
+      "median_price": 0.7381,
+      "mean_price": 0.8034649999999999,
+      "min_price": 0.605,
+      "max_price": 1.9456
+    },
+    {
+      "city": "淮安",
+      "n": 80,
+      "median_price": 0.735,
+      "mean_price": 0.8043825,
+      "min_price": 0.585,
+      "max_price": 1.49
+    },
+    {
+      "city": "林芝",
+      "n": 75,
+      "median_price": 0.7276,
+      "mean_price": 0.7656413333333333,
+      "min_price": 0.49,
+      "max_price": 2.6666
+    },
+    {
+      "city": "洛阳",
+      "n": 80,
+      "median_price": 0.72,
+      "mean_price": 0.8016987500000001,
+      "min_price": 0.6091,
+      "max_price": 3.0
+    },
+    {
+      "city": "昌都",
+      "n": 38,
+      "median_price": 0.705,
+      "mean_price": 0.7685263157894737,
+      "min_price": 0.2,
+      "max_price": 1.61
+    },
+    {
+      "city": "晋城",
+      "n": 80,
+      "median_price": 0.705,
+      "mean_price": 0.7380424999999999,
+      "min_price": 0.54,
+      "max_price": 1.3529
+    },
+    {
+      "city": "长治",
+      "n": 80,
+      "median_price": 0.7,
+      "mean_price": 0.720405,
+      "min_price": 0.485,
+      "max_price": 1.2573
+    },
+    {
+      "city": "襄阳",
+      "n": 80,
+      "median_price": 0.7,
+      "mean_price": 0.77669375,
+      "min_price": 0.59,
+      "max_price": 1.6574
+    },
+    {
+      "city": "东营",
+      "n": 69,
+      "median_price": 0.7,
+      "mean_price": 0.9987434782608696,
+      "min_price": 0.3992,
+      "max_price": 4.3301
+    },
+    {
+      "city": "沧州",
+      "n": 80,
+      "median_price": 0.6879,
+      "mean_price": 0.76424625,
+      "min_price": 0.56,
+      "max_price": 3.15
+    },
+    {
+      "city": "承德",
+      "n": 80,
+      "median_price": 0.68,
+      "mean_price": 0.71472625,
+      "min_price": 0.545,
+      "max_price": 1.1891
+    },
+    {
+      "city": "宣城",
+      "n": 80,
+      "median_price": 0.65,
+      "mean_price": 0.6950037499999999,
+      "min_price": 0.54,
+      "max_price": 1.15
+    },
+    {
+      "city": "宿迁",
+      "n": 79,
+      "median_price": 0.6483,
+      "mean_price": 0.7434354430379747,
+      "min_price": 0.53,
+      "max_price": 3.1031
+    },
+    {
+      "city": "黄山",
+      "n": 80,
+      "median_price": 0.645,
+      "mean_price": 0.73139375,
+      "min_price": 0.54,
+      "max_price": 2.6
+    },
+    {
+      "city": "伊犁",
+      "n": 80,
+      "median_price": 0.64415,
+      "mean_price": 0.65877375,
+      "min_price": 0.4728,
+      "max_price": 1.468
+    },
+    {
+      "city": "德州",
+      "n": 80,
+      "median_price": 0.6422,
+      "mean_price": 0.6998274999999999,
+      "min_price": 0.52,
+      "max_price": 1.4932
+    },
+    {
+      "city": "塔城",
+      "n": 80,
+      "median_price": 0.64185,
+      "mean_price": 0.6585737500000001,
+      "min_price": 0.47,
+      "max_price": 1.3426
+    },
+    {
+      "city": "马鞍山",
+      "n": 80,
+      "median_price": 0.63705,
+      "mean_price": 0.72183625,
+      "min_price": 0.483,
+      "max_price": 1.88
+    },
+    {
+      "city": "石家庄",
+      "n": 80,
+      "median_price": 0.6315,
+      "mean_price": 0.6695212500000001,
+      "min_price": 0.545,
+      "max_price": 1.19
+    },
+    {
+      "city": "枣庄",
+      "n": 77,
+      "median_price": 0.63,
+      "mean_price": 0.7327584415584416,
+      "min_price": 0.48,
+      "max_price": 1.874
+    },
+    {
+      "city": "合肥",
+      "n": 78,
+      "median_price": 0.6265499999999999,
+      "mean_price": 0.6836589743589744,
+      "min_price": 0.53,
+      "max_price": 2.351
+    },
+    {
+      "city": "宜昌",
+      "n": 80,
+      "median_price": 0.62,
+      "mean_price": 0.6506525,
+      "min_price": 0.4879,
+      "max_price": 1.2527
+    },
+    {
+      "city": "日照",
+      "n": 79,
+      "median_price": 0.6192,
+      "mean_price": 0.7315088607594937,
+      "min_price": 0.46,
+      "max_price": 2.203
+    },
+    {
+      "city": "上饶",
+      "n": 79,
+      "median_price": 0.61,
+      "mean_price": 0.6791999999999999,
+      "min_price": 0.5,
+      "max_price": 2.0532
+    },
+    {
+      "city": "包头",
+      "n": 80,
+      "median_price": 0.60055,
+      "mean_price": 0.6516362499999999,
+      "min_price": 0.4957,
+      "max_price": 1.3402
+    },
+    {
+      "city": "赣州",
+      "n": 79,
+      "median_price": 0.6,
+      "mean_price": 0.6821569620253165,
+      "min_price": 0.53,
+      "max_price": 2.388
+    },
+    {
+      "city": "南阳",
+      "n": 72,
+      "median_price": 0.5946,
+      "mean_price": 0.7193041666666667,
+      "min_price": 0.5013,
+      "max_price": 1.3922
+    },
+    {
+      "city": "濮阳",
+      "n": 80,
+      "median_price": 0.59,
+      "mean_price": 0.6157575000000001,
+      "min_price": 0.495,
+      "max_price": 1.0521
+    },
+    {
+      "city": "滨州",
+      "n": 80,
+      "median_price": 0.58795,
+      "mean_price": 0.62765625,
+      "min_price": 0.4497,
+      "max_price": 1.257
+    },
+    {
+      "city": "张家口",
+      "n": 80,
+      "median_price": 0.585,
+      "mean_price": 0.6908237500000001,
+      "min_price": 0.49,
+      "max_price": 2.72
+    },
+    {
+      "city": "池州",
+      "n": 80,
+      "median_price": 0.58,
+      "mean_price": 0.6187,
+      "min_price": 0.32,
+      "max_price": 1.2
+    },
+    {
+      "city": "九江",
+      "n": 79,
+      "median_price": 0.58,
+      "mean_price": 0.7378189873417722,
+      "min_price": 0.502,
+      "max_price": 1.81
+    },
+    {
+      "city": "吉安",
+      "n": 79,
+      "median_price": 0.57,
+      "mean_price": 0.6287329113924051,
+      "min_price": 0.51,
+      "max_price": 1.0298
+    },
+    {
+      "city": "安庆",
+      "n": 79,
+      "median_price": 0.565,
+      "mean_price": 0.6314936708860759,
+      "min_price": 0.5076,
+      "max_price": 1.3
+    },
+    {
+      "city": "阜阳",
+      "n": 80,
+      "median_price": 0.56375,
+      "mean_price": 0.602645,
+      "min_price": 0.465,
+      "max_price": 1.2204
+    },
+    {
+      "city": "赤峰",
+      "n": 80,
+      "median_price": 0.5611,
+      "mean_price": 0.5941099999999999,
+      "min_price": 0.465,
+      "max_price": 1.25
+    },
+    {
+      "city": "邢台",
+      "n": 80,
+      "median_price": 0.55305,
+      "mean_price": 0.59779375,
+      "min_price": 0.475,
+      "max_price": 1.0659
+    },
+    {
+      "city": "太原",
+      "n": 80,
+      "median_price": 0.55,
+      "mean_price": 0.594515,
+      "min_price": 0.495,
+      "max_price": 0.97
+    },
+    {
+      "city": "衡水",
+      "n": 80,
+      "median_price": 0.5488500000000001,
+      "mean_price": 0.56881375,
+      "min_price": 0.4355,
+      "max_price": 0.85
+    },
+    {
+      "city": "鄂尔多斯",
+      "n": 78,
+      "median_price": 0.5486500000000001,
+      "mean_price": 0.5663448717948718,
+      "min_price": 0.44,
+      "max_price": 0.8722
+    },
+    {
+      "city": "抚州",
+      "n": 79,
+      "median_price": 0.54,
+      "mean_price": 0.6017987341772152,
+      "min_price": 0.4776,
+      "max_price": 1.98
+    },
+    {
+      "city": "通辽",
+      "n": 80,
+      "median_price": 0.5396000000000001,
+      "mean_price": 0.5429625,
+      "min_price": 0.44,
+      "max_price": 0.7966
+    },
+    {
+      "city": "宜春",
+      "n": 80,
+      "median_price": 0.53815,
+      "mean_price": 0.6075412499999999,
+      "min_price": 0.475,
+      "max_price": 1.79
+    },
+    {
+      "city": "乌海",
+      "n": 80,
+      "median_price": 0.53615,
+      "mean_price": 0.56879375,
+      "min_price": 0.41,
+      "max_price": 1.25
+    },
+    {
+      "city": "榆林",
+      "n": 80,
+      "median_price": 0.53415,
+      "mean_price": 0.67402625,
+      "min_price": 0.46,
+      "max_price": 2.2431
+    },
+    {
+      "city": "克拉玛依",
+      "n": 80,
+      "median_price": 0.5307999999999999,
+      "mean_price": 0.5714825,
+      "min_price": 0.38,
+      "max_price": 0.9238
+    },
+    {
+      "city": "淮北",
+      "n": 80,
+      "median_price": 0.53,
+      "mean_price": 0.5622962499999999,
+      "min_price": 0.37,
+      "max_price": 1.1126
+    },
+    {
+      "city": "信阳",
+      "n": 79,
+      "median_price": 0.5254,
+      "mean_price": 0.5400354430379747,
+      "min_price": 0.4,
+      "max_price": 1.09
+    },
+    {
+      "city": "长沙",
+      "n": 80,
+      "median_price": 0.5225,
+      "mean_price": 0.5377449999999999,
+      "min_price": 0.42,
+      "max_price": 0.74
+    },
+    {
+      "city": "喀什",
+      "n": 80,
+      "median_price": 0.5217499999999999,
+      "mean_price": 0.52764375,
+      "min_price": 0.395,
+      "max_price": 0.7078
+    },
+    {
+      "city": "咸阳",
+      "n": 78,
+      "median_price": 0.52,
+      "mean_price": 0.5888371794871795,
+      "min_price": 0.445,
+      "max_price": 1.61
+    },
+    {
+      "city": "蚌埠",
+      "n": 79,
+      "median_price": 0.5174,
+      "mean_price": 0.5926417721518987,
+      "min_price": 0.4449,
+      "max_price": 1.2641
+    },
+    {
+      "city": "亳州",
+      "n": 80,
+      "median_price": 0.51605,
+      "mean_price": 0.54657875,
+      "min_price": 0.4083,
+      "max_price": 0.95
+    },
+    {
+      "city": "忻州",
+      "n": 80,
+      "median_price": 0.515,
+      "mean_price": 0.534365,
+      "min_price": 0.385,
+      "max_price": 0.7836
+    },
+    {
+      "city": "景德镇",
+      "n": 80,
+      "median_price": 0.51375,
+      "mean_price": 0.51480625,
+      "min_price": 0.42,
+      "max_price": 0.7
+    },
+    {
+      "city": "恩施",
+      "n": 80,
+      "median_price": 0.51,
+      "mean_price": 0.52737375,
+      "min_price": 0.42,
+      "max_price": 1.05
+    },
+    {
+      "city": "昌吉",
+      "n": 80,
+      "median_price": 0.50805,
+      "mean_price": 0.51438125,
+      "min_price": 0.3986,
+      "max_price": 0.6618
+    },
+    {
+      "city": "商丘",
+      "n": 73,
+      "median_price": 0.508,
+      "mean_price": 0.6387493150684932,
+      "min_price": 0.37,
+      "max_price": 1.9422
+    },
+    {
+      "city": "菏泽",
+      "n": 80,
+      "median_price": 0.5075000000000001,
+      "mean_price": 0.57938625,
+      "min_price": 0.4044,
+      "max_price": 2.0
+    },
+    {
+      "city": "山南",
+      "n": 69,
+      "median_price": 0.5,
+      "mean_price": 0.5411927536231884,
+      "min_price": 0.24,
+      "max_price": 1.15
+    },
+    {
+      "city": "新乡",
+      "n": 80,
+      "median_price": 0.4975,
+      "mean_price": 0.51569375,
+      "min_price": 0.42,
+      "max_price": 0.89
+    },
+    {
+      "city": "开封",
+      "n": 80,
+      "median_price": 0.49445,
+      "mean_price": 0.530825,
+      "min_price": 0.385,
+      "max_price": 1.25
+    },
+    {
+      "city": "六安",
+      "n": 80,
+      "median_price": 0.49,
+      "mean_price": 0.52863125,
+      "min_price": 0.3996,
+      "max_price": 0.92
+    },
+    {
+      "city": "安阳",
+      "n": 80,
+      "median_price": 0.49,
+      "mean_price": 0.52305125,
+      "min_price": 0.395,
+      "max_price": 1.11
+    },
+    {
+      "city": "许昌",
+      "n": 80,
+      "median_price": 0.4875,
+      "mean_price": 0.5335375,
+      "min_price": 0.39,
+      "max_price": 1.25
+    },
+    {
+      "city": "海东",
+      "n": 80,
+      "median_price": 0.485,
+      "mean_price": 0.4944275,
+      "min_price": 0.38,
+      "max_price": 0.9
+    },
+    {
+      "city": "晋中",
+      "n": 79,
+      "median_price": 0.485,
+      "mean_price": 0.5289202531645569,
+      "min_price": 0.43,
+      "max_price": 0.8823
+    },
+    {
+      "city": "哈密",
+      "n": 80,
+      "median_price": 0.4831,
+      "mean_price": 0.5089875,
+      "min_price": 0.4028,
+      "max_price": 0.7263
+    },
+    {
+      "city": "阿克苏",
+      "n": 80,
+      "median_price": 0.48235,
+      "mean_price": 0.49373374999999997,
+      "min_price": 0.3794,
+      "max_price": 0.7257
+    },
+    {
+      "city": "滁州",
+      "n": 80,
+      "median_price": 0.475,
+      "mean_price": 0.51605625,
+      "min_price": 0.37,
+      "max_price": 1.5839
+    },
+    {
+      "city": "那曲",
+      "n": 12,
+      "median_price": 0.475,
+      "mean_price": 0.4683333333333333,
+      "min_price": 0.3,
+      "max_price": 0.61
+    },
+    {
+      "city": "克孜勒苏",
+      "n": 80,
+      "median_price": 0.47324999999999995,
+      "mean_price": 0.4925625,
+      "min_price": 0.37,
+      "max_price": 0.7257
+    },
+    {
+      "city": "吕梁",
+      "n": 80,
+      "median_price": 0.4675,
+      "mean_price": 0.49045625,
+      "min_price": 0.38,
+      "max_price": 0.8
+    },
+    {
+      "city": "焦作",
+      "n": 80,
+      "median_price": 0.4657,
+      "mean_price": 0.51761875,
+      "min_price": 0.3443,
+      "max_price": 1.26
+    },
+    {
+      "city": "临汾",
+      "n": 76,
+      "median_price": 0.465,
+      "mean_price": 0.5150881578947368,
+      "min_price": 0.405,
+      "max_price": 0.9715
+    },
+    {
+      "city": "铜陵",
+      "n": 79,
+      "median_price": 0.4643,
+      "mean_price": 0.5050759493670887,
+      "min_price": 0.17,
+      "max_price": 1.4036
+    },
+    {
+      "city": "鹰潭",
+      "n": 80,
+      "median_price": 0.46265,
+      "mean_price": 0.47556750000000003,
+      "min_price": 0.245,
+      "max_price": 0.9
+    },
+    {
+      "city": "十堰",
+      "n": 80,
+      "median_price": 0.461,
+      "mean_price": 0.50099625,
+      "min_price": 0.3614,
+      "max_price": 1.0852
+    },
+    {
+      "city": "漯河",
+      "n": 80,
+      "median_price": 0.4575,
+      "mean_price": 0.48137749999999996,
+      "min_price": 0.36,
+      "max_price": 1.0
+    },
+    {
+      "city": "安康",
+      "n": 80,
+      "median_price": 0.455,
+      "mean_price": 0.4703925,
+      "min_price": 0.34,
+      "max_price": 0.8587
+    },
+    {
+      "city": "巴音郭楞",
+      "n": 80,
+      "median_price": 0.45405,
+      "mean_price": 0.47482375,
+      "min_price": 0.3583,
+      "max_price": 0.722
+    },
+    {
+      "city": "淮南",
+      "n": 80,
+      "median_price": 0.45020000000000004,
+      "mean_price": 0.48575,
+      "min_price": 0.335,
+      "max_price": 0.9956
+    },
+    {
+      "city": "新余",
+      "n": 80,
+      "median_price": 0.45,
+      "mean_price": 0.46531625,
+      "min_price": 0.3074,
+      "max_price": 0.8559
+    },
+    {
+      "city": "西安",
+      "n": 78,
+      "median_price": 0.45,
+      "mean_price": 0.4917846153846154,
+      "min_price": 0.38,
+      "max_price": 0.88
+    },
+    {
+      "city": "呼伦贝尔",
+      "n": 80,
+      "median_price": 0.44984999999999997,
+      "mean_price": 0.48474500000000004,
+      "min_price": 0.3,
+      "max_price": 1.0209
+    },
+    {
+      "city": "阿里",
+      "n": 2,
+      "median_price": 0.4475,
+      "mean_price": 0.4475,
+      "min_price": 0.43,
+      "max_price": 0.465
+    },
+    {
+      "city": "阳泉",
+      "n": 80,
+      "median_price": 0.44415000000000004,
+      "mean_price": 0.45663625,
+      "min_price": 0.34,
+      "max_price": 0.7207
+    },
+    {
+      "city": "延安",
+      "n": 80,
+      "median_price": 0.44065,
+      "mean_price": 0.51818,
+      "min_price": 0.2828,
+      "max_price": 1.4925
+    },
+    {
+      "city": "周口",
+      "n": 80,
+      "median_price": 0.44065,
+      "mean_price": 0.454775,
+      "min_price": 0.345,
+      "max_price": 0.909
+    },
+    {
+      "city": "黄石",
+      "n": 80,
+      "median_price": 0.44035,
+      "mean_price": 0.4877975,
+      "min_price": 0.3597,
+      "max_price": 0.88
+    },
+    {
+      "city": "岳阳",
+      "n": 77,
+      "median_price": 0.4388,
+      "mean_price": 0.4743519480519481,
+      "min_price": 0.355,
+      "max_price": 2.5463
+    },
+    {
+      "city": "郴州",
+      "n": 80,
+      "median_price": 0.438,
+      "mean_price": 0.46878875,
+      "min_price": 0.345,
+      "max_price": 0.8649
+    },
+    {
+      "city": "汉中",
+      "n": 80,
+      "median_price": 0.4375,
+      "mean_price": 0.44783,
+      "min_price": 0.34,
+      "max_price": 0.9725
+    },
+    {
+      "city": "南昌",
+      "n": 79,
+      "median_price": 0.4331,
+      "mean_price": 0.4399063291139241,
+      "min_price": 0.355,
+      "max_price": 0.6005
+    },
+    {
+      "city": "荆州",
+      "n": 80,
+      "median_price": 0.4321,
+      "mean_price": 0.47093125,
+      "min_price": 0.355,
+      "max_price": 1.25
+    },
+    {
+      "city": "驻马店",
+      "n": 80,
+      "median_price": 0.43,
+      "mean_price": 0.4605,
+      "min_price": 0.37,
+      "max_price": 0.7669
+    },
+    {
+      "city": "渭南",
+      "n": 78,
+      "median_price": 0.43,
+      "mean_price": 0.4664833333333333,
+      "min_price": 0.37,
+      "max_price": 0.772
+    },
+    {
+      "city": "巴彦淖尔",
+      "n": 80,
+      "median_price": 0.42,
+      "mean_price": 0.44837625000000003,
+      "min_price": 0.305,
+      "max_price": 0.7758
+    },
+    {
+      "city": "运城",
+      "n": 80,
+      "median_price": 0.42,
+      "mean_price": 0.47026375,
+      "min_price": 0.34,
+      "max_price": 0.98
+    },
+    {
+      "city": "大同",
+      "n": 78,
+      "median_price": 0.41735,
+      "mean_price": 0.5379269230769231,
+      "min_price": 0.3454,
+      "max_price": 1.7913
+    },
+    {
+      "city": "娄底",
+      "n": 80,
+      "median_price": 0.4173,
+      "mean_price": 0.44182750000000004,
+      "min_price": 0.355,
+      "max_price": 0.5995
+    },
+    {
+      "city": "鹤壁",
+      "n": 80,
+      "median_price": 0.41005,
+      "mean_price": 0.47376000000000007,
+      "min_price": 0.25,
+      "max_price": 0.9103
+    },
+    {
+      "city": "常德",
+      "n": 79,
+      "median_price": 0.4022,
+      "mean_price": 0.47205822784810125,
+      "min_price": 0.345,
+      "max_price": 1.37
+    },
+    {
+      "city": "荆门",
+      "n": 80,
+      "median_price": 0.4,
+      "mean_price": 0.424535,
+      "min_price": 0.305,
+      "max_price": 0.98
+    },
+    {
+      "city": "株洲",
+      "n": 79,
+      "median_price": 0.4,
+      "mean_price": 0.4609898734177215,
+      "min_price": 0.34,
+      "max_price": 1.3
+    },
+    {
+      "city": "商洛",
+      "n": 80,
+      "median_price": 0.3975,
+      "mean_price": 0.4287525,
+      "min_price": 0.15,
+      "max_price": 0.85
+    },
+    {
+      "city": "益阳",
+      "n": 79,
+      "median_price": 0.395,
+      "mean_price": 0.4312506329113924,
+      "min_price": 0.325,
+      "max_price": 0.72
+    },
+    {
+      "city": "黄冈",
+      "n": 80,
+      "median_price": 0.395,
+      "mean_price": 0.43247625,
+      "min_price": 0.325,
+      "max_price": 0.8
+    },
+    {
+      "city": "三门峡",
+      "n": 80,
+      "median_price": 0.395,
+      "mean_price": 0.42097125,
+      "min_price": 0.345,
+      "max_price": 0.8341
+    },
+    {
+      "city": "和田",
+      "n": 80,
+      "median_price": 0.39425,
+      "mean_price": 0.41973000000000005,
+      "min_price": 0.3156,
+      "max_price": 0.7502
+    },
+    {
+      "city": "阿勒泰",
+      "n": 80,
+      "median_price": 0.39,
+      "mean_price": 0.41277375000000005,
+      "min_price": 0.265,
+      "max_price": 0.7083
+    },
+    {
+      "city": "孝感",
+      "n": 80,
+      "median_price": 0.39,
+      "mean_price": 0.42705874999999993,
+      "min_price": 0.3,
+      "max_price": 0.8769
+    },
+    {
+      "city": "衡阳",
+      "n": 80,
+      "median_price": 0.3875,
+      "mean_price": 0.43152749999999995,
+      "min_price": 0.3363,
+      "max_price": 1.24
+    },
+    {
+      "city": "咸宁",
+      "n": 78,
+      "median_price": 0.38385,
+      "mean_price": 0.4222217948717949,
+      "min_price": 0.3023,
+      "max_price": 1.3421
+    },
+    {
+      "city": "张家界",
+      "n": 79,
+      "median_price": 0.38,
+      "mean_price": 0.39500379746835446,
+      "min_price": 0.125,
+      "max_price": 0.7816
+    },
+    {
+      "city": "鄂州",
+      "n": 80,
+      "median_price": 0.38,
+      "mean_price": 0.4301525,
+      "min_price": 0.3012,
+      "max_price": 1.2087
+    },
+    {
+      "city": "永州",
+      "n": 80,
+      "median_price": 0.37825,
+      "mean_price": 0.4151775,
+      "min_price": 0.32,
+      "max_price": 0.72
+    },
+    {
+      "city": "随州",
+      "n": 80,
+      "median_price": 0.37815,
+      "mean_price": 0.41654875,
+      "min_price": 0.3,
+      "max_price": 1.7
+    },
+    {
+      "city": "湘潭",
+      "n": 79,
+      "median_price": 0.37,
+      "mean_price": 0.4111772151898734,
+      "min_price": 0.32,
+      "max_price": 1.2
+    },
+    {
+      "city": "博尔塔拉",
+      "n": 80,
+      "median_price": 0.36205,
+      "mean_price": 0.38606625,
+      "min_price": 0.29,
+      "max_price": 0.97
+    },
+    {
+      "city": "宝鸡",
+      "n": 80,
+      "median_price": 0.36,
+      "mean_price": 0.42813375000000004,
+      "min_price": 0.2991,
+      "max_price": 1.7
+    },
+    {
+      "city": "邵阳",
+      "n": 76,
+      "median_price": 0.36,
+      "mean_price": 0.39205526315789474,
+      "min_price": 0.315,
+      "max_price": 0.6216
+    },
+    {
+      "city": "乌兰察布",
+      "n": 80,
+      "median_price": 0.35009999999999997,
+      "mean_price": 0.3796425,
+      "min_price": 0.275,
+      "max_price": 0.6628
+    },
+    {
+      "city": "朔州",
+      "n": 80,
+      "median_price": 0.3365,
+      "mean_price": 0.36856999999999995,
+      "min_price": 0.28,
+      "max_price": 0.6834
+    },
+    {
+      "city": "怀化",
+      "n": 80,
+      "median_price": 0.335,
+      "mean_price": 0.3448825,
+      "min_price": 0.275,
+      "max_price": 0.5311
+    },
+    {
+      "city": "萍乡",
+      "n": 80,
+      "median_price": 0.32425000000000004,
+      "mean_price": 0.34294625,
+      "min_price": 0.22,
+      "max_price": 0.5864
+    },
+    {
+      "city": "铜川",
+      "n": 80,
+      "median_price": 0.2949,
+      "mean_price": 0.33499500000000004,
+      "min_price": 0.11,
+      "max_price": 0.7931
+    },
+    {
+      "city": "海南藏族自治州",
+      "n": 51,
+      "median_price": 0.28,
+      "mean_price": 0.3557843137254902,
+      "min_price": 0.1,
+      "max_price": 1.8
+    },
+    {
+      "city": "吐鲁番",
+      "n": 80,
+      "median_price": 0.275,
+      "mean_price": 0.30462625,
+      "min_price": 0.235,
+      "max_price": 0.8
+    },
+    {
+      "city": "黄南",
+      "n": 17,
+      "median_price": 0.265,
+      "mean_price": 0.2585294117647059,
+      "min_price": 0.1,
+      "max_price": 0.35
+    },
+    {
+      "city": "海西",
+      "n": 14,
+      "median_price": 0.2625,
+      "mean_price": 0.2525,
+      "min_price": 0.155,
+      "max_price": 0.4
+    },
+    {
+      "city": "玉树",
+      "n": 14,
+      "median_price": 0.2625,
+      "mean_price": 0.2525,
+      "min_price": 0.155,
+      "max_price": 0.4
+    },
+    {
+      "city": "海北",
+      "n": 29,
+      "median_price": 0.26,
+      "mean_price": 0.2489655172413793,
+      "min_price": 0.18,
+      "max_price": 0.35
+    },
+    {
+      "city": "果洛",
+      "n": 6,
+      "median_price": 0.1975,
+      "mean_price": 0.20333333333333334,
+      "min_price": 0.19,
+      "max_price": 0.24
+    }
+  ],
+  "top15_cities": [
+    {
+      "city": "上海",
+      "n": 80,
+      "median_price": 13.5762,
+      "mean_price": 14.779295,
+      "min_price": 12.1,
+      "max_price": 30.0
+    },
+    {
+      "city": "北京",
+      "n": 80,
+      "median_price": 12.0175,
+      "mean_price": 12.668845000000001,
+      "min_price": 10.7,
+      "max_price": 21.0
+    },
+    {
+      "city": "深圳",
+      "n": 80,
+      "median_price": 11.06025,
+      "mean_price": 12.716745,
+      "min_price": 8.3944,
+      "max_price": 38.8316
+    },
+    {
+      "city": "东莞",
+      "n": 80,
+      "median_price": 9.9637,
+      "mean_price": 12.33685625,
+      "min_price": 8.41,
+      "max_price": 41.4545
+    },
+    {
+      "city": "宁波",
+      "n": 80,
+      "median_price": 7.0588,
+      "mean_price": 7.56894125,
+      "min_price": 5.4349,
+      "max_price": 16.1051
+    },
+    {
+      "city": "广州",
+      "n": 80,
+      "median_price": 7.04345,
+      "mean_price": 8.2109925,
+      "min_price": 5.7027,
+      "max_price": 23.7
+    },
+    {
+      "city": "南京",
+      "n": 55,
+      "median_price": 6.6318,
+      "mean_price": 7.176776363636363,
+      "min_price": 3.7716,
+      "max_price": 15.4
+    },
+    {
+      "city": "杭州",
+      "n": 80,
+      "median_price": 6.5701,
+      "mean_price": 7.443785,
+      "min_price": 5.4684,
+      "max_price": 18.8638
+    },
+    {
+      "city": "天津",
+      "n": 80,
+      "median_price": 6.056649999999999,
+      "mean_price": 6.495699999999999,
+      "min_price": 4.44,
+      "max_price": 10.77
+    },
+    {
+      "city": "宿州",
+      "n": 80,
+      "median_price": 3.6683,
+      "mean_price": 4.05073625,
+      "min_price": 3.1,
+      "max_price": 7.29
+    },
+    {
+      "city": "成都",
+      "n": 80,
+      "median_price": 3.4592,
+      "mean_price": 3.791645,
+      "min_price": 2.9,
+      "max_price": 8.5
+    },
+    {
+      "city": "济南",
+      "n": 55,
+      "median_price": 3.2608,
+      "mean_price": 3.920487272727273,
+      "min_price": 1.8492,
+      "max_price": 11.6451
+    },
+    {
+      "city": "三亚",
+      "n": 80,
+      "median_price": 2.8925,
+      "mean_price": 3.2516262499999997,
+      "min_price": 2.16,
+      "max_price": 8.7
+    },
+    {
+      "city": "苏州",
+      "n": 80,
+      "median_price": 2.73975,
+      "mean_price": 2.923245,
+      "min_price": 2.52,
+      "max_price": 9.5767
+    },
+    {
+      "city": "青岛",
+      "n": 80,
+      "median_price": 2.62115,
+      "mean_price": 2.8895187499999997,
+      "min_price": 2.3,
+      "max_price": 5.9557
+    }
+  ],
+  "bottom10_cities": [
+    {
+      "city": "果洛",
+      "n": 6,
+      "median_price": 0.1975,
+      "mean_price": 0.20333333333333334,
+      "min_price": 0.19,
+      "max_price": 0.24
+    },
+    {
+      "city": "海北",
+      "n": 29,
+      "median_price": 0.26,
+      "mean_price": 0.2489655172413793,
+      "min_price": 0.18,
+      "max_price": 0.35
+    },
+    {
+      "city": "玉树",
+      "n": 14,
+      "median_price": 0.2625,
+      "mean_price": 0.2525,
+      "min_price": 0.155,
+      "max_price": 0.4
+    },
+    {
+      "city": "海西",
+      "n": 14,
+      "median_price": 0.2625,
+      "mean_price": 0.2525,
+      "min_price": 0.155,
+      "max_price": 0.4
+    },
+    {
+      "city": "黄南",
+      "n": 17,
+      "median_price": 0.265,
+      "mean_price": 0.2585294117647059,
+      "min_price": 0.1,
+      "max_price": 0.35
+    },
+    {
+      "city": "吐鲁番",
+      "n": 80,
+      "median_price": 0.275,
+      "mean_price": 0.30462625,
+      "min_price": 0.235,
+      "max_price": 0.8
+    },
+    {
+      "city": "海南藏族自治州",
+      "n": 51,
+      "median_price": 0.28,
+      "mean_price": 0.3557843137254902,
+      "min_price": 0.1,
+      "max_price": 1.8
+    },
+    {
+      "city": "铜川",
+      "n": 80,
+      "median_price": 0.2949,
+      "mean_price": 0.33499500000000004,
+      "min_price": 0.11,
+      "max_price": 0.7931
+    },
+    {
+      "city": "萍乡",
+      "n": 80,
+      "median_price": 0.32425000000000004,
+      "mean_price": 0.34294625,
+      "min_price": 0.22,
+      "max_price": 0.5864
+    },
+    {
+      "city": "怀化",
+      "n": 80,
+      "median_price": 0.335,
+      "mean_price": 0.3448825,
+      "min_price": 0.275,
+      "max_price": 0.5311
+    }
+  ],
+  "most_polarized": [
+    {
+      "city": "海南藏族自治州",
+      "min_price": 0.1,
+      "max_price": 1.8,
+      "spread_ratio": 18.0
+    },
+    {
+      "city": "东营",
+      "min_price": 0.3992,
+      "max_price": 4.3301,
+      "spread_ratio": 10.84694388777555
+    },
+    {
+      "city": "郑州",
+      "min_price": 1.13,
+      "max_price": 10.8571,
+      "spread_ratio": 9.608053097345135
+    },
+    {
+      "city": "扬州",
+      "min_price": 0.8758,
+      "max_price": 7.5748,
+      "spread_ratio": 8.649006622516556
+    },
+    {
+      "city": "烟台",
+      "min_price": 0.6508,
+      "max_price": 5.51,
+      "spread_ratio": 8.466502765826673
+    },
+    {
+      "city": "泰安",
+      "min_price": 0.6236,
+      "max_price": 5.2501,
+      "spread_ratio": 8.419018601667736
+    },
+    {
+      "city": "铜陵",
+      "min_price": 0.17,
+      "max_price": 1.4036,
+      "spread_ratio": 8.256470588235294
+    },
+    {
+      "city": "昌都",
+      "min_price": 0.2,
+      "max_price": 1.61,
+      "spread_ratio": 8.05
+    },
+    {
+      "city": "镇江",
+      "min_price": 0.604,
+      "max_price": 4.4229,
+      "spread_ratio": 7.322682119205298
+    },
+    {
+      "city": "铜川",
+      "min_price": 0.11,
+      "max_price": 0.7931,
+      "spread_ratio": 7.21
+    }
+  ],
+  "chengdu_districts": [
+    {
+      "district_clean": "金牛",
+      "n": 7,
+      "median_price": 3.6239
+    },
+    {
+      "district_clean": "天府新区",
+      "n": 15,
+      "median_price": 3.5899
+    },
+    {
+      "district_clean": "青羊",
+      "n": 21,
+      "median_price": 3.54
+    },
+    {
+      "district_clean": "高新区",
+      "n": 13,
+      "median_price": 3.4584
+    },
+    {
+      "district_clean": "武侯",
+      "n": 7,
+      "median_price": 3.3
+    },
+    {
+      "district_clean": "锦江",
+      "n": 9,
+      "median_price": 3.2441
+    },
+    {
+      "district_clean": "成华",
+      "n": 5,
+      "median_price": 3.1
+    }
+  ],
+  "xian_anomaly": {
+    "离石": 42,
+    "孝义": 21,
+    "文水": 7,
+    "中阳": 2,
+    "汾阳": 2,
+    "柳林": 2,
+    "兴县": 1,
+    "临县": 1
+  },
+  "era_table": [
+    {
+      "era": "1990前",
+      "n": 140,
+      "median_price": 4.82535
+    },
+    {
+      "era": "1990-1999",
+      "n": 741,
+      "median_price": 0.9
+    },
+    {
+      "era": "2000-2009",
+      "n": 2074,
+      "median_price": 0.81935
+    },
+    {
+      "era": "2010-2019",
+      "n": 2452,
+      "median_price": 0.8725
+    },
+    {
+      "era": "2020后",
+      "n": 1699,
+      "median_price": 0.88
+    }
+  ],
+  "corr_age_price_city": {},
+  "corr_year_price": -0.13830208252935455,
+  "supply_top15": [
+    {
+      "city": "巴音郭楞",
+      "secondhand": 3295,
+      "rent": 733,
+      "median_price": 0.45405
+    },
+    {
+      "city": "昌吉",
+      "secondhand": 3267,
+      "rent": 1130,
+      "median_price": 0.50805
+    },
+    {
+      "city": "西宁",
+      "secondhand": 3205,
+      "rent": 951,
+      "median_price": 0.83575
+    },
+    {
+      "city": "银川",
+      "secondhand": 2852,
+      "rent": 1163,
+      "median_price": 0.87
+    },
+    {
+      "city": "合肥",
+      "secondhand": 2653,
+      "rent": 879,
+      "median_price": 0.6265499999999999
+    },
+    {
+      "city": "伊犁",
+      "secondhand": 2646,
+      "rent": 950,
+      "median_price": 0.64415
+    },
+    {
+      "city": "包头",
+      "secondhand": 2488,
+      "rent": 738,
+      "median_price": 0.60055
+    },
+    {
+      "city": "克拉玛依",
+      "secondhand": 2303,
+      "rent": 589,
+      "median_price": 0.5307999999999999
+    },
+    {
+      "city": "贵阳",
+      "secondhand": 2186,
+      "rent": 770,
+      "median_price": 0.7967500000000001
+    },
+    {
+      "city": "绵阳",
+      "secondhand": 2176,
+      "rent": 748,
+      "median_price": 0.7706500000000001
+    },
+    {
+      "city": "秦皇岛",
+      "secondhand": 2138,
+      "rent": 1068,
+      "median_price": 0.8585
+    },
+    {
+      "city": "塔城",
+      "secondhand": 2062,
+      "rent": 1021,
+      "median_price": 0.64185
+    },
+    {
+      "city": "宿迁",
+      "secondhand": 1962,
+      "rent": 770,
+      "median_price": 0.6483
+    },
+    {
+      "city": "蚌埠",
+      "secondhand": 1809,
+      "rent": 1156,
+      "median_price": 0.5174
+    },
+    {
+      "city": "无锡",
+      "secondhand": 1727,
+      "rent": 509,
+      "median_price": 2.0038
+    }
+  ],
+  "corr_second_rent": 0.5309799260197772,
+  "rent_ratio_top10": [
+    {
+      "city": "山南",
+      "rent_ratio": 77.0,
+      "median_price": 0.5
+    },
+    {
+      "city": "阿勒泰",
+      "rent_ratio": 28.666666666666668,
+      "median_price": 0.39
+    },
+    {
+      "city": "昌都",
+      "rent_ratio": 22.0,
+      "median_price": 0.705
+    },
+    {
+      "city": "林芝",
+      "rent_ratio": 12.220430107526882,
+      "median_price": 0.7276
+    },
+    {
+      "city": "商洛",
+      "rent_ratio": 7.5625,
+      "median_price": 0.3975
+    },
+    {
+      "city": "铜川",
+      "rent_ratio": 6.9375,
+      "median_price": 0.2949
+    },
+    {
+      "city": "博尔塔拉",
+      "rent_ratio": 6.022988505747127,
+      "median_price": 0.36205
+    },
+    {
+      "city": "抚州",
+      "rent_ratio": 5.469178082191781,
+      "median_price": 0.54
+    },
+    {
+      "city": "景德镇",
+      "rent_ratio": 4.904761904761905,
+      "median_price": 0.51375
+    },
+    {
+      "city": "菏泽",
+      "rent_ratio": 4.372093023255814,
+      "median_price": 0.5075000000000001
+    }
+  ],
+  "geo_n": 11060
+}

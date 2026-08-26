@@ -1,0 +1,193 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 8 课 · 地理可视化：画出房价"星空图" + 结课</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html" class="active">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 8 课 / 共 8 课</div>
+    <h1>地理可视化：画出房价"星空图" + 结课</h1>
+    <p class="desc">收官一课做最好玩的事：数据里有 11,060 个小区带经纬度坐标，我们把每个小区当成一颗星星画在图上，用颜色表示价格——不用任何地图软件，一张散点图就能"看见"中国的房价版图，甚至能看见一条著名的地理分界线。</p>
+    <div class="tags">
+      <span class="tag">成果收官</span>
+      <span class="tag">约 25 分钟</span>
+      <span class="tag">本课产出：房价星空图 + 后续学习路线</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>学会画带颜色映射的散点图（scatter + colorbar）</li>
+      <li>理解为什么价格上色要用"对数刻度"</li>
+      <li>从图里读出地理结构：城市群、价格断层、胡焕庸线</li>
+      <li>规划结课之后的学习方向</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>准备带坐标的数据</h3></div>
+      <p class="note">先回顾第 2 课的原则——按需清洗：画地图只要求行里有经纬度，其他列缺不缺无所谓：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step8_geo.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+<span class="k">import</span> numpy <span class="k">as</span> np                     <span class="cm"># numpy：数值计算工具，pandas 的好搭档</span>
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+df = df.drop_duplicates()
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+
+<span class="cm"># 只保留有经纬度的行（约 73.5%）</span>
+geo = df.dropna(subset=[<span class="s">"longitude"</span>, <span class="s">"latitude"</span>]).copy()
+print(<span class="s">"带坐标的小区："</span>, len(geo))</pre>
+      </div>
+      <div class="console">带坐标的小区： 11060</div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>画星空图（关键：对数上色）</h3></div>
+      <p class="note">直接用 price 上色有个问题：价格从 0.1 万到 41 万跨度 400 倍，几乎所有点都会挤在最暗的那一档。<strong>对数刻度</strong>能把"1000 与 41000 的差距"压缩成"3 与 4.6 的差距"，让贵的点亮起来而不淹没便宜的点：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step8_geo.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+plt.rcParams[<span class="s">"font.sans-serif"</span>] = [<span class="s">"Microsoft YaHei"</span>, <span class="s">"PingFang SC"</span>, <span class="s">"SimHei"</span>]
+plt.rcParams[<span class="s">"axes.unicode_minus"</span>] = <span class="k">False</span>
+
+fig, ax = plt.subplots(figsize=(8.6, 5.4))
+sc = ax.scatter(
+    geo[<span class="s">"longitude"</span>], geo[<span class="s">"latitude"</span>],      <span class="cm"># x=经度，y=纬度</span>
+    c=np.log10(geo[<span class="s">"price"</span>]),             <span class="cm"># 颜色 = 价格取对数</span>
+    cmap=<span class="s">"viridis"</span>,                        <span class="cm"># 配色方案：暗紫→亮黄</span>
+    s=2.2, alpha=0.55, linewidths=0,     <span class="cm"># 点很小、半透明，防止糊成一团</span>
+)
+cbar = fig.colorbar(sc, ax=ax, shrink=0.85)
+cbar.set_label(<span class="s">"挂牌单价（万/㎡，对数刻度）"</span>)
+ax.set_xlabel(<span class="s">"经度"</span>)
+ax.set_ylabel(<span class="s">"纬度"</span>)
+ax.set_title(<span class="s">"11,060 个小区的地理分布（颜色越亮越贵）"</span>)
+plt.tight_layout()
+plt.savefig(<span class="s">"geo_scatter.png"</span>, dpi=150)
+plt.show()</pre>
+      </div>
+      <figure class="chart">
+        <img src="assets/charts/geo_scatter.svg" alt="全国小区房价星空图">
+        <figcaption>11,060 个小区按真实经纬度散布，颜色代表挂牌单价（对数刻度）。不需要任何地图底图，1.5 万个点自己就"拼"出了中国的轮廓。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>读图：三分钟看懂中国房价版图</h3></div>
+      <div class="callout tip">
+        <h4>这张图至少能读出四层信息</h4>
+        <p><strong>① 城市轮廓浮现：</strong>点密集的地方就是城市群——长三角、京津冀、珠三角、成渝清晰可辨；小亮点是省会和区域中心。</p>
+        <p><strong>② 最亮的在三处：</strong>看最黄最亮的点团：北京、上海、深圳/东莞（以及长三角的苏州-杭州带）。第 4 课的 Top15 排行在地图上被"照亮"了一遍——排行榜和星空图互为印证。</p>
+        <p><strong>③ 西部大片暗区：</strong>不仅点稀疏，而且颜色偏暗——对应第 4 课"最便宜 10 城"清一色西部州县。价格的空间格局和排行榜完全一致。</p>
+        <p><strong>④ 一条隐形的线：</strong>从东北黑龙江到西南云南画一条线，线的东南侧星星密集成片，西北侧几乎空白——这就是地理学著名的<strong>胡焕庸线</strong>（黑河—腾冲线）。我们只画了房价数据点，中国人口地理的大结构却自己浮现出来。<strong>好可视化就是有这种"顺手揭示大格局"的力量。</strong></p>
+      </div>
+      <div class="callout egg">
+        <h4>彩蛋：为什么不上真地图？</h4>
+        <p>想让点真正落在地图上，可以用 <code>folium</code>（交互地图）或 <code>plotly</code>，它们能加载在线底图。但作为入门，纯散点图零依赖、秒出图，已经能回答"哪里贵、哪里密"的问题。<strong>先解决问题，再追求华丽</strong>——这也是工具选择的哲学。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="section">
+    <h2>结课：你已经学会了什么</h2>
+    <p class="sub">回头看这 8 课，你的工具箱里已经有：</p>
+    <div class="table-wrap">
+      <table class="data">
+        <tr><th>能力</th><th>在哪课学的</th><th>以后能干什么</th></tr>
+        <tr><td>环境搭建 + 读数据</td><td>第 1 课</td><td>任何 CSV / Excel 数据都能装进电脑分析</td></tr>
+        <tr><td>数据清洗</td><td>第 2 课</td><td>去重、按需处理缺失、修脏字段、数据体检</td></tr>
+        <tr><td>统计描述 + 直方图</td><td>第 3 课</td><td>五分钟摸清任何一列数据的长相</td></tr>
+        <tr><td>groupby 分组聚合</td><td>第 4 课</td><td>数据分析使用率第一的招式，Excel 透视表的一切</td></tr>
+        <tr><td>布尔筛选 + 样本门槛</td><td>第 5 课</td><td>从大表切出任意子集做专项分析</td></tr>
+        <tr><td>相关分析 + 统计思维</td><td>第 6 课</td><td>识别混杂变量、幸存者偏差，不当"数字傻瓜"</td></tr>
+        <tr><td>汇总 + 口径意识</td><td>第 7 课</td><td>分得清"样本内总量"和"真实总量"，报错口径</td></tr>
+        <tr><td>地理可视化</td><td>第 8 课</td><td>用散点图讲一个空间故事</td></tr>
+      </table>
+    </div>
+    <p class="sub">更重要的是贯穿 8 课的三条<strong>思维方式</strong>：先看数据再下结论；用常识审视每个结果；永远追问样本量、口径和混杂变量。</p>
+  </section>
+
+  <section class="section">
+    <h2>下一步去哪</h2>
+    <div class="concepts">
+      <div class="concept">
+        <h4>① Jupyter Notebook</h4>
+        <p>把"写代码-看结果"融在一个页面里的笔记本，数据分析的标配环境。<code>python -m pip install notebook</code> 后运行 <code>jupyter notebook</code>。把 8 课的代码搬进去逐格重跑一遍，是最好的复习。</p>
+      </div>
+      <div class="concept">
+        <h4>② seaborn 美化图表</h4>
+        <p>基于 matplotlib 的"美颜滤镜"，一行 <code>sns.histplot(df["price"])</code> 就出精致统计图。<code>python -m pip install seaborn</code> 即装即用。</p>
+      </div>
+      <div class="concept">
+        <h4>③ 真地图 folium</h4>
+        <p>把第 8 课的星空图升级成交互地图，能缩放、能点出每个小区的名字。教程彩蛋里那些经纬度坐标直接就能用。</p>
+      </div>
+      <div class="concept">
+        <h4>④ 机器学习</h4>
+        <p>当你会熟练清洗数据、看懂相关关系之后，就够到机器学习的门槛了：用 scikit-learn 拿这份数据预测价格、聚类小区。记住：<strong>数据和特征决定上限，模型只是逼近上限。</strong></p>
+      </div>
+    </div>
+    <div class="callout tip">
+      <h4>完整代码合集</h4>
+      <p>本教程 8 课用到的全部代码（含出图脚本的完整版）都整理在 <a href="assets/complete_analysis.py" download>complete_analysis.py</a>，约 200 行，带中文注释。把它保存下来，日后当成自己的"分析模板"改着用。</p>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>结课大作业（选做，但强烈推荐）</h4>
+    <ol>
+      <li>选一个你感兴趣的城市，完成一份"迷你房价报告"：城市在全国的排名、内部各区对比、楼龄结构、样本内挂牌情况，配 2–3 张图。</li>
+      <li>把报告写成一个 Markdown 文件或 Jupyter Notebook，发给你朋友看——<strong>能讲给别人听，才算真的学会。</strong></li>
+    </ol>
+    <details>
+      <summary>提示：报告骨架</summary>
+      <pre># XX 市房价迷你报告
+1. 全局定位：该市中位价 X 万/㎡，全国第 N 名（第 4 课代码）
+2. 内部结构：各区中位价对比图 + 一句话解读（第 5 课代码）
+3. 楼龄画像：各年代小区占比 + 价格差异（第 6 课代码）
+4. 一句话结论 + 数据口径说明（样本量、数据是抽样非全量）</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson7.html"><div class="dir">← 上一课</div><div class="title">供需分析：哪些城市在大量卖房</div></a>
+    <a class="next" href="index.html"><div class="dir">返回</div><div class="title">课程表（结课啦 🎉）</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程 —— 完</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>

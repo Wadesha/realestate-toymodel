@@ -1,0 +1,184 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>全国小区房价数据分析 · 零基础入门教程</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="lesson1.html" class="btn-ghost">从第 1 课开始 →</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <!-- ===== Hero ===== -->
+  <section class="hero">
+    <span class="badge">零基础 · 跟着做就能会 · 每个结果都是真实跑出来的</span>
+    <h1>用 15,346 个小区的房价数据，<br>带你完成人生第一次数据分析</h1>
+    <p>这是一份写给"完全没做过数据分析"的人的教程。你不需要任何编程基础——只要会打字、会复制粘贴，跟着 8 节课一步步做，就能亲手跑出下面所有结果。</p>
+    <div class="cta">
+      <a class="btn btn-primary" href="lesson1.html">第 1 课：准备工作（从这里开始）</a>
+      <a class="btn btn-ghost" href="#schedule">先看看课程表</a>
+    </div>
+  </section>
+
+  <!-- ===== 数据集一览 ===== -->
+  <div class="stats">
+    <div class="stat"><div class="num">15,346</div><div class="lbl">小区数据（行）</div></div>
+    <div class="stat"><div class="num">209</div><div class="lbl">覆盖城市</div></div>
+    <div class="stat"><div class="num">18</div><div class="lbl">字段（列）</div></div>
+    <div class="stat"><div class="num">0.61<small> 万/㎡</small></div><div class="lbl">全国中位挂牌单价</div></div>
+  </div>
+
+  <!-- ===== 成果速览 ===== -->
+  <section class="section">
+    <h2>跟着做完，你会亲手跑出这些结果</h2>
+    <p class="sub">下面每张图、每个数字，都是用本教程的代码在这份数据上真实运行得到的——不是示意图。你做完就能得到一模一样的结果。</p>
+
+    <figure class="chart">
+      <img src="assets/charts/geo_scatter.svg" alt="全国小区地理分布星空图">
+      <figcaption>第 8 课产出：11,060 个小区按经纬度画在图上，颜色越亮价格越高。不用地图 API，一个散点图就能看出中国房价的"星空"——最亮的几团正是北上深。</figcaption>
+    </figure>
+
+    <figure class="chart">
+      <img src="assets/charts/city_top15.svg" alt="城市中位房价Top15">
+      <figcaption>第 4 课产出：城市中位单价排行。上海（13.58 万/㎡）→ 北京（12.02）→ 深圳（11.06）→ 东莞（9.96）——房价的天花板一目了然。</figcaption>
+    </figure>
+
+    <figure class="chart">
+      <img src="assets/charts/price_dist.svg" alt="全国房价分布直方图">
+      <figcaption>第 3 课产出：全国房价分布。中位数只有 0.61 万/㎡，平均数却是 1.31 万/㎡——为什么差这么多？第 3 课会告诉你答案。</figcaption>
+    </figure>
+  </section>
+
+  <!-- ===== 课程表 ===== -->
+  <section class="section" id="schedule">
+    <h2>课程表（8 节课，建议按顺序）</h2>
+    <p class="sub">每节课 15–30 分钟：先讲清概念，再给出可以整段复制运行的代码，最后展示真实运行结果和解读。</p>
+    <div class="lesson-grid">
+
+      <a class="lesson-card" href="lesson1.html">
+        <div class="no">1</div>
+        <div>
+          <h3>准备工作：让电脑能跑 Python</h3>
+          <p>安装 Python 和 pandas，读取 CSV，看懂 18 个字段都是什么意思。</p>
+          <div class="meta">零基础起点 · 30 分钟 · 产出：屏幕上打印出前 5 行数据</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson2.html">
+        <div class="no">2</div>
+        <div>
+          <h3>数据清洗：把"脏数据"变干净</h3>
+          <p>去掉 250 行重复、44 行合成数据、17 行没有价格的数据，把"2023历下"变成"历下"。</p>
+          <div class="meta">核心技能 · 25 分钟 · 产出：15,346 行 → 15,035 行干净数据</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson3.html">
+        <div class="no">3</div>
+        <div>
+          <h3>第一个分析：全国房价长什么样</h3>
+          <p>用 describe() 五分钟摸底，画第一张直方图，理解为什么房价要用中位数而不是平均数。</p>
+          <div class="meta">第一张图 · 25 分钟 · 产出：全国房价分布图 + 最贵小区 Top10</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson4.html">
+        <div class="no">4</div>
+        <div>
+          <h3>城市对比：哪里最贵、哪里最便宜</h3>
+          <p>学会 groupby 分组聚合（数据分析最常用的招式），排出城市房价 Top15 和 Bottom10。</p>
+          <div class="meta">核心招式 · 25 分钟 · 产出：两张城市排行榜 + 认识"小样本陷阱"</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson5.html">
+        <div class="no">5</div>
+        <div>
+          <h3>深入一座城：成都哪个区最贵</h3>
+          <p>用布尔筛选聚焦一个城市，对比区县房价。还有一个"数据体检"彩蛋：西安的数据居然有问题。</p>
+          <div class="meta">进阶筛选 · 20 分钟 · 产出：成都 7 区房价对比图</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson6.html">
+        <div class="no">6</div>
+        <div>
+          <h3>楼龄与房价：房子越新越贵吗</h3>
+          <p>算相关系数、按年代分组。这一课的结论会颠覆直觉——并教会你"相关不等于因果"。</p>
+          <div class="meta">思维训练 · 25 分钟 · 产出：年代-房价对比图 + 一个反常识发现</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson7.html">
+        <div class="no">7</div>
+        <div>
+          <h3>供需分析：哪些城市在大量卖房</h3>
+          <p>汇总各城市二手挂牌量和租房挂牌量，看看"卖房"和"租房"到底有没有关系。</p>
+          <div class="meta">双色图表 · 20 分钟 · 产出：挂牌量 Top15 双色条形图</div>
+        </div>
+      </a>
+
+      <a class="lesson-card" href="lesson8.html">
+        <div class="no">8</div>
+        <div>
+          <h3>地理可视化：画出房价"星空图" + 结课</h3>
+          <p>把 11,060 个带坐标的小区画成一张星空图，然后聊聊下一步该学什么。</p>
+          <div class="meta">成果收官 · 25 分钟 · 产出：星空图 + 后续学习路线</div>
+        </div>
+      </a>
+
+    </div>
+  </section>
+
+  <!-- ===== 怎么用 ===== -->
+  <section class="section">
+    <h2>怎么用这份教程</h2>
+    <div class="concepts">
+      <div class="concept">
+        <h4>① 边看边做</h4>
+        <p>不要只读。打开电脑，每段代码都亲自复制到自己的文件里运行一遍。数据分析是练出来的，不是看会的。</p>
+      </div>
+      <div class="concept">
+        <h4>② 对照结果</h4>
+        <p>每段代码下面都附了"真实运行结果"。你跑出来的数字应该和教程一致（个别浮动正常）。不一致就停下来排查。</p>
+      </div>
+      <div class="concept">
+        <h4>③ 做课后练习</h4>
+        <p>每课末尾有 1–3 个小练习，附参考答案（默认折叠）。做完练习这一课才算真正学会。</p>
+      </div>
+      <div class="concept">
+        <h4>④ 报错不可怕</h4>
+        <p>初学 90% 的卡壳都是：文件路径不对、包没装上、变量名打错。第 1 课末尾有一张"常见报错对照表"，遇到报错先查它。</p>
+      </div>
+    </div>
+
+    <div class="callout warn">
+      <h4>开始前，准备好两样东西</h4>
+      <p>1️⃣ 一台电脑（Windows / Mac 都可以）；2️⃣ 数据文件 <code>toy_realestate_sample.csv</code>（和本教程同一目录，约 4 MB）。其他所有工具，第 1 课会带你免费装好。</p>
+    </div>
+
+    <div class="callout tip">
+      <h4>这份数据是什么来头？</h4>
+      <p>它是"全国房产 toymodel 训练样例集"：覆盖 209 个城市、约 1.5 万个小区的挂牌价、位置、挂牌量等信息，主体来自对公开房源网站的抽样，仅对个别无数据城市做了少量合成补位（已用 <code>synthetic</code> 列标记）。它适合学方法、练分析，<strong>不能当作权威房价基准</strong>——这本身就是数据分析的第一课：先搞清楚手里的数据能回答什么问题。</p>
+    </div>
+  </section>
+
+</div>
+
+<footer class="site">
+  <p>全国小区房价数据分析 · 零基础入门教程 —— 所有图表与数字均由 <code>assets/complete_analysis.py</code> 在本数据集上真实运行生成。</p>
+</footer>
+
+<script src="assets/app.js"></script>
+</body>
+</html>

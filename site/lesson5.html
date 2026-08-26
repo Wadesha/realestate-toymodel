@@ -1,0 +1,183 @@
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>第 5 课 · 深入一座城：成都哪个区最贵</title>
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="topbar">
+  <div class="topbar-inner">
+    <a class="brand" href="index.html"><span class="brand-mark">房</span>全国房价数据分析入门教程</a>
+    <nav>
+      <a href="index.html">课程表</a>
+      <a href="lesson1.html">1</a>
+      <a href="lesson2.html">2</a>
+      <a href="lesson3.html">3</a>
+      <a href="lesson4.html">4</a>
+      <a href="lesson5.html" class="active">5</a>
+      <a href="lesson6.html">6</a>
+      <a href="lesson7.html">7</a>
+      <a href="lesson8.html">8</a>
+    </nav>
+  </div>
+</header>
+
+<div class="container">
+
+  <div class="lesson-hero">
+    <div class="kicker">第 5 课 / 共 8 课</div>
+    <h1>深入一座城：成都哪个区最贵</h1>
+    <p class="desc">上一课是"上帝视角"看 209 个城市，这一课我们降落地面，用<strong>布尔筛选</strong>把镜头对准一座城市内部：成都的几个区，哪里的房子最贵？顺带经历一次真实的数据分析日常——<strong>计划选的城市数据不够用，临时换目标</strong>。</p>
+    <div class="tags">
+      <span class="tag">进阶筛选</span>
+      <span class="tag">约 20 分钟</span>
+      <span class="tag">本课产出：成都 7 区房价对比图</span>
+    </div>
+  </div>
+
+  <div class="goals">
+    <h2>本课目标</h2>
+    <ul>
+      <li>熟练使用布尔筛选：从 15,035 行里精确取出"成都的行"</li>
+      <li>学会给分组统计加<strong>样本量门槛</strong>（n ≥ 5）</li>
+      <li>体验真实工作流：第一选择不行就换，而不是硬凑结论</li>
+      <li>解读"差距不大"的结果——不显著的差异也是发现</li>
+    </ul>
+  </div>
+
+  <section class="section">
+    <h2>一步步做</h2>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">1</div><h3>先踩个坑：济南不好使</h3></div>
+      <p class="note">教程原本打算分析济南（毕竟第 1 课看到的前几行都是济南）。于是先查一查济南的区县样本够不够：</p>
+      <div class="codeblock">
+        <div class="cb-head"><span>step5_chengdu.py · 探路</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> pandas <span class="k">as</span> pd
+
+df = pd.read_csv(<span class="s">"toy_realestate_sample.csv"</span>, encoding=<span class="s">"utf-8-sig"</span>)
+df = df.drop_duplicates()
+df = df[df[<span class="s">"synthetic"</span>] == 0]
+df = df[df[<span class="s">"price"</span>].notna() & (df[<span class="s">"price"</span>] > 0)]
+df[<span class="s">"district_clean"</span>] = df[<span class="s">"district"</span>].astype(str).str.replace(
+    <span class="s">r"^\d{4}"</span>, <span class="s">""</span>, regex=<span class="k">True</span>)
+
+<span class="cm"># 济南各区县的样本量</span>
+print(df[df[<span class="s">"city"</span>] == <span class="s">"济南"</span>][<span class="s">"district_clean"</span>].value_counts())</pre>
+      </div>
+      <div class="console">历下    40
+市中     8
+历城     3
+高新     2
+槐荫     1
+天桥     1
+Name: district_clean, dtype: int64</div>
+      <p class="note">去重之后，济南只剩 55 个小区，其中 4 个区的样本不足 5 个。硬要画图的话，"槐荫（1 个小区）vs 历下（40 个小区）"的对比毫无意义。<strong>换！</strong>选区县样本分布最均匀的大城市——成都（7 个区都有 5 个以上样本）。</p>
+      <div class="callout tip">
+        <h4>这是数据分析的真实节奏</h4>
+        <p>教程不会假装每一步都按计划进行。真实工作中，"选好的研究对象数据不够 → 果断换一个"每天都在发生。<strong>原则：让问题迁就数据的质量，而不是让结论迁就数据的残缺。</strong></p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">2</div><h3>核心代码：筛选 + 分组 + 门槛</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step5_chengdu.py</span><button class="copy">复制代码</button></div>
+        <pre><span class="cm"># ① 布尔筛选：只留成都的行</span>
+cd = df[df[<span class="s">"city"</span>] == <span class="s">"成都"</span>]
+
+<span class="cm"># ② 按干净区县名分组，算样本量和中位价</span>
+result = (
+    cd.groupby(<span class="s">"district_clean"</span>)
+      .agg(n=(<span class="s">"community_name"</span>, <span class="s">"count"</span>),
+           median_price=(<span class="s">"price"</span>, <span class="s">"median"</span>))
+      .query(<span class="s">"n >= 5"</span>)                     <span class="cm"># ③ 样本量门槛：n>=5 才有资格上榜</span>
+      .sort_values(<span class="s">"median_price"</span>, ascending=<span class="k">False</span>)
+      .reset_index()
+)
+
+print(result.to_string(index=<span class="k">False</span>))</pre>
+      </div>
+      <div class="console">district_clean   n  median_price
+         金牛   7       3.6175
+      天府新区  15       3.5900
+         青羊  21       3.5365
+        高新区  13       3.4575
+         武侯   7       3.3000
+         锦江   9       3.2400
+         成华   5       3.1000</div>
+      <div class="callout tip">
+        <h4>.query("n >= 5") 是什么？</h4>
+        <p>它等价于 <code>result[result["n"] >= 5]</code>，只是把条件写成一句话，更好读。作用是把样本量太小的组踢出去——第 4 课"小样本陷阱"的行动版。两个写法选顺手的用。</p>
+      </div>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">3</div><h3>画图：成都各区对比</h3></div>
+      <div class="codeblock">
+        <div class="cb-head"><span>step5_chengdu.py · 追加</span><button class="copy">复制代码</button></div>
+        <pre><span class="k">import</span> matplotlib.pyplot <span class="k">as</span> plt
+
+plt.rcParams[<span class="s">"font.sans-serif"</span>] = [<span class="s">"Microsoft YaHei"</span>, <span class="s">"PingFang SC"</span>, <span class="s">"SimHei"</span>]
+plt.rcParams[<span class="s">"axes.unicode_minus"</span>] = <span class="k">False</span>
+
+fig, ax = plt.subplots(figsize=(8, 4.2))
+ax.bar(result[<span class="s">"district_clean"</span>], result[<span class="s">"median_price"</span>],
+       color=<span class="s">"#2563eb"</span>, width=0.6)
+ax.set_ylabel(<span class="s">"中位挂牌单价（万/㎡）"</span>)
+ax.set_xlabel(<span class="s">"区县"</span>)
+ax.set_title(<span class="s">"成都各区县中位挂牌单价（样例 ≥5 个小区）"</span>)
+plt.tight_layout()
+plt.savefig(<span class="s">"chengdu_district.png"</span>, dpi=150)
+plt.show()</pre>
+      </div>
+      <figure class="chart">
+        <img src="assets/charts/chengdu_district.svg" alt="成都各区县中位房价">
+        <figcaption>成都 7 个区的中位挂牌单价，全部落在 3.10～3.62 万/㎡ 之间。</figcaption>
+      </figure>
+    </div>
+
+    <div class="step">
+      <div class="step-head"><div class="step-num">4</div><h3>解读：一个"没有大新闻"的结果</h3></div>
+      <p class="note">看到这张图先别失望——<strong>差距不大本身就是重要发现</strong>。注意三个层次：</p>
+      <div class="callout tip">
+        <h4>怎么解读这组结果</h4>
+        <p><strong>① 整体格局：</strong>7 个区都在 3.1～3.6 万之间，最大差距只有 17%。成都的房价分布相当"扁平"——不像某些城市，隔着一条街就是两个价位（回忆第 4 课郑州 1.13 万 vs 10.86 万的 9.6 倍分化）。<br>
+        <strong>② 排名解读要小心：</strong>金牛排第一（3.62 万），但它只有 7 个样本——多抽一个贵小区就可能改写排名。青羊 21 个样本、天府新区 15 个，它们的 3.54 / 3.59 反而更稳。<br>
+        <strong>③ 和常识对照：</strong>直觉上成都最贵的应该是锦江、青羊（老牌核心区）或高新（新区）。数据说它们和"第一名"没有显著差别。真实市场里成都各区房价差距也确实不算悬殊，这个结论方向上靠谱。</p>
+      </div>
+    </div>
+  </section>
+
+  <section class="exercise">
+    <h4>课后练习</h4>
+    <ol>
+      <li>把城市换成<strong>你熟悉的城市</strong>（先看看它各区样本量够不够，不够就换一个）。</li>
+      <li>把门槛从 n≥5 提到 n≥10，看看成都的榜单少了谁、排名有没有变化。</li>
+      <li>进阶：同时显示中位价和样本量——把 n 塞进 x 轴标签里，比如"青羊 (n=21)"。（提示：字符串拼接 <code>result["district_clean"] + " (n=" + result["n"].astype(str) + ")"</code>）</li>
+    </ol>
+    <details>
+      <summary>点开看参考答案</summary>
+      <pre># 练习2：n>=10 后只剩 青羊21 天府新区15 高新区13 三家，金牛(7)、武侯(7)、
+# 锦江(9)、成华(5) 被门槛筛掉——榜单变短，但每一条都更可信。
+
+# 练习3：
+labels = result["district_clean"] + " (n=" + result["n"].astype(str) + ")"
+ax.bar(labels, result["median_price"], ...)</pre>
+    </details>
+  </section>
+
+  <nav class="lesson-nav">
+    <a href="lesson4.html"><div class="dir">← 上一课</div><div class="title">城市对比：哪里最贵、哪里最便宜</div></a>
+    <a class="next" href="lesson6.html"><div class="dir">下一课</div><div class="title">楼龄与房价：房子越新越贵吗 →</div></a>
+  </nav>
+
+</div>
+
+<footer class="site"><p>全国小区房价数据分析 · 零基础入门教程</p></footer>
+<script src="assets/app.js"></script>
+</body>
+</html>
