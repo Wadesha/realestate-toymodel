@@ -29,7 +29,8 @@ jobs:
           echo "enabled=$( [ "$code" = "200" ] && echo true || echo false )" >> "$GITHUB_OUTPUT"
       - name: Show hint when Pages is not enabled
         if: steps.pages_check.outputs.enabled != 'true'
-        run: echo "Pages 尚未启用，跳过部署。请到 Settings → Pages 开启（选 Deploy from a branch: main/(root)，或选 GitHub Actions）。"
+        run: |
+          echo "Pages 尚未启用，跳过部署。请到 Settings → Pages 开启（Deploy from a branch - main/root，或 GitHub Actions）。"
       - uses: actions/upload-pages-artifact@v3
         if: steps.pages_check.outputs.enabled == 'true'
         with:
